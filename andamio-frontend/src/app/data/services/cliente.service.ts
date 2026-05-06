@@ -22,4 +22,13 @@ export class ClienteService {
     clientes.push(cliente);
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(clientes));
   }
+
+  desactivarCliente(id: number): void {
+    const clientes = this.getClientes();
+    const index = clientes.findIndex(c => c.id === id);
+    if (index !== -1) {
+      clientes[index].estaActivo = false; // Solo lo "apagamos"
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(clientes));
+    }
+  }
 }

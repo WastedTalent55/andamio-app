@@ -7,6 +7,7 @@
   <div class="grid-clientes">
     @for (cliente of misClientes; track cliente.id) {
       <article class="tarjeta-cliente">
+        <button class="btn-eliminar" (click)="confirmarEliminar(cliente)">×</button>
         <div class="avatar-cliente">{{ cliente.nombre[0] }}</div>
         <div class="info-cliente">
           <h2>{{ cliente.nombre }}</h2>

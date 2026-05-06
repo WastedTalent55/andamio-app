@@ -46,3 +46,28 @@
     font-weight: 500;
   }
 }
+
+.tarjeta-cliente {
+  position: relative; // Para que el botón se posicione respecto a la tarjeta
+
+  .btn-eliminar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: #ccc; // Color discreto
+    font-size: 1.5rem;
+    cursor: pointer;
+    opacity: 0; // Escondido por defecto
+    transition: all 0.3s;
+
+    &:hover {
+      color: #E2725B; // Se pone terracota al tocarlo
+    }
+  }
+
+  &:hover .btn-eliminar {
+    opacity: 1; // Aparece al pasar el mouse por la tarjeta
+  }
+} 

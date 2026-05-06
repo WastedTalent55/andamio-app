@@ -32,7 +32,8 @@ export class ClienteFormComponent {
         id: Date.now(), // ID temporal
         nombre: this.clienteForm.value.nombre,
         contacto: this.clienteForm.value.contactoDirecto,
-        ubicaciones: [this.clienteForm.value.direccion]
+        ubicaciones: [this.clienteForm.value.direccion],
+        estaActivo: true
       };
       this.clienteGuardado.emit(nuevo);
       this.clienteForm.reset();
