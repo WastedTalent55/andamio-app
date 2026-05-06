@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ClienteService } from '../../../../data/services/cliente.service';
 import { Cliente } from '../../../../data/models/cliente.model';
 import { ClienteFormComponent } from '../../components/cliente-form/cliente-form.component';
 
@@ -8,26 +9,23 @@ import { ClienteFormComponent } from '../../components/cliente-form/cliente-form
   templateUrl: './list-clientes.component.html',
   styleUrl: './list-clientes.component.scss'
 })
-export class ListClientesComponent {
-  misClientes: Cliente[] = [
-    {
-      id: 1,
-      nombre: 'Alex Soler',
-      contacto: '55 1234 5678',
-      ubicaciones: ['Calle Falsa 123, Col. Centro', 'Av. Siempre Viva 742']
-    },
-    {
-      id: 2,
-      nombre: 'María García',
-      contacto: '55 9876 5432',
-      ubicaciones: ['Taller de Costura, Int 4']
-    }
-  ];
-
+export class ListClientesComponent implements OnInit {
+  misClientes: Cliente[] = [];
   mostrarModal = false;
 
-agregarALista(nuevo: Cliente) {
-  this.misClientes.push(nuevo);
-  this.mostrarModal = false;
-}
+  constructor(private clienteService: ClienteService) {}
+
+  ngOnInit(): void {
+    this.cargarClientes();
+  }
+
+  cargarClientes() {
+    this.misClientes = this.clienteService.getClientes();
+  }
+
+  agregarALista(nuevo: Cliente) {
+    this.clienteService.agregarCliente(nuevo); // Guarda en LocalStorage
+    this.cargarClientes(); // Refresca la lista
+    this.mostrarModal = false;
+  }
 }
