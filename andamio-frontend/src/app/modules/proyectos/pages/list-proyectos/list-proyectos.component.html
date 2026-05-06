@@ -3,6 +3,45 @@
   <button class="btn-nuevo" (click)="mostrarModal = true">+ Nueva Evaluación</button>
 </header>
 
+<div class="tablero-proyectos">
+  
+  <section class="columna">
+    <h3>🔍 Visitas de Evaluación</h3>
+    <div class="lista-cards">
+      @for (p of proyectosEvaluacion; track p.id) {
+        @let cliente = getDatosCliente(p.clienteId);
+
+        <article class="card-proyecto">
+          <div class="card-header">
+            <h4>{{ p.nombre }}</h4>
+            <span class="tag-estado">{{ p.estado }}</span>
+          </div>
+
+          <div class="card-body">
+            <p><strong>Cliente:</strong> {{ cliente?.nombre || 'Desconocido' }}</p>
+            <p><strong>Contacto:</strong> {{ cliente?.contacto }}</p>
+            <p><strong>📍 Lugar:</strong> {{ p.direccionVisita }}</p>
+            
+            <hr>
+            
+            <p>📅 <strong>Fecha:</strong> {{ p.fechaVisita | date:'dd/MM/yyyy' }}</p>
+            <p>💰 <strong>Costo Evaluación:</strong> ${{ p.costoVisita }}</p>
+            </div>
+
+            <div class="card-footer">
+            <button class="btn-primario" (click)="prepararCotizacion(p)">
+                Generar Cotización
+            </button>
+          </div>
+        </article>
+      } @empty {
+        <p class="empty-state">No hay visitas programadas.</p>
+      }
+    </div>
+  </section>
+
+  </div>
+
 @if (mostrarModal) {
   <app-proyecto-form 
     (proyectoGuardado)="agregarProyectoALista($event)" 
