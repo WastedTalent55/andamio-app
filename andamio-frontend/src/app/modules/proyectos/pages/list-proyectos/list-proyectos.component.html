@@ -12,29 +12,16 @@
       </div>
       
       <div class="lista-cards">
-        @for (p of proyectosEvaluacion; track p.id) {
-          @let cliente = getDatosCliente(p.clienteId);
-          <article class="card-proyecto">
-
-            <div class="card-acciones">
-              <button class="btn-icon" (click)="editarProyecto(p)" title="Editar">✏️</button>
-              <button class="btn-icon btn-cancelar" (click)="cancelarProyecto(p)" title="Cancelar">🚫</button>
-            </div>
-
-            <div class="card-tag">Cita</div>
-            <h4>{{ p.nombre }}</h4>
-            <div class="info-cliente">
-              <p>👤 {{ cliente?.nombre }}</p>
-              <p>📍 {{ p.direccionVisita }}</p>
-            </div>
-            <div class="card-footer">
-              <span class="fecha">📅 {{ p.fechaVisita | date:'dd MMM' }}</span>
-              <span class="monto">${{ p.costoVisita }}</span>
-            </div>
-            <button class="btn-accion" (click)="prepararCotizacion(p)">Cotizar</button>
-          </article>
-        }
-      </div>
+  @for (p of proyectosEvaluacion; track p.id) {
+    <app-card-proyecto 
+      [proyecto]="p" 
+      [cliente]="getDatosCliente(p.clienteId)"
+      (editar)="editarProyecto($event)"
+      (cancelar)="cancelarProyecto($event)"
+      (cotizar)="prepararCotizacion($event)">
+    </app-card-proyecto>
+  }
+</div>
     </section>
 
     <section class="columna">

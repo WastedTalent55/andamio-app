@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ProyectoService } from '../../../../data/services/proyecto.service';
 import { Proyecto } from '../../../../data/models/proyecto.model';
 import { ProyectoFormComponent } from '../../components/proyecto-form/proyecto-form.component';
-import { DatePipe } from '@angular/common';
 import { ClienteService } from '../../../../data/services/cliente.service';
 import { CotizacionFormComponent } from '../../components/cotizacion-form/cotizacion-form.component';
+import { CardProyectoComponent } from '../../components/card-proyecto/card-proyecto.component';
 
 @Component({
   selector: 'app-list-proyectos',
-  imports: [ProyectoFormComponent, DatePipe, CotizacionFormComponent],
+  imports: [ProyectoFormComponent, CotizacionFormComponent, CardProyectoComponent],
   templateUrl: './list-proyectos.component.html',
   styleUrl: './list-proyectos.component.scss'
 })
@@ -86,19 +86,19 @@ proyectoParaCotizar?: Proyecto;
     this.proyectoParaCotizar = undefined;
   }
 
-  actualizarProyectoConCotizacion(proyectoActualizado: Proyecto) {
-    // 1. Cambiamos el estado del proyecto para que se mueva de columna
-    proyectoActualizado.estado = 'Cotización';
+  actualizarProyectoConCotizacion(nuevaCotizacion: any) {
+  if (this.proyectoParaCotizar) {
+    // 1. Le agregamos la cotización al proyecto
+    if (!this.proyectoParaCotizar.cotizaciones) {
+      this.proyectoParaCotizar.cotizaciones = [];
+    }
+    this.proyectoParaCotizar.cotizaciones.push(nuevaCotizacion);
+
+    // 2. Cambiamos el estado para que se mueva de columna si quieres
+    this.proyectoParaCotizar.estado = 'Cotización';
     
-    // 2. Guardamos los cambios en el LocalStorage a través del servicio
-    this.proyectoService.actualizarProyecto(proyectoActualizado);
-    
-    // 3. Refrescamos las listas del tablero
-    this.cargarProyectos();
-    
-    // 4. Cerramos el modal
+    // 3. Cerramos el modal
     this.cerrarModalCotizacion();
-    
-    console.log('¡Proyecto movido a Cotización!', proyectoActualizado);
   }
+}
 }

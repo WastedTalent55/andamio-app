@@ -47,7 +47,7 @@ export class ProyectoFormComponent implements OnInit {
     if (this.proyectoAEditar) {
       this.proyectoForm.patchValue({
         clienteId: this.proyectoAEditar.clienteId,
-        nombreProyecto: this.proyectoAEditar.nombre,
+        nombre: this.proyectoAEditar.nombre,
         fechaVisita: this.proyectoAEditar.fechaVisita,
         direccionVisita: this.proyectoAEditar.direccionVisita,
         costoVisita: this.proyectoAEditar.costoVisita

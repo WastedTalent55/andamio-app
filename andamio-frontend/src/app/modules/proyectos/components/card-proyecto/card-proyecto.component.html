@@ -1,0 +1,28 @@
+<article class="card-proyecto">
+  <div class="card-acciones">
+    @if (proyecto.cotizaciones && proyecto.cotizaciones.length > 0) {
+      <button class="btn-pdf-descarga" (click)="descargarPDF($event)" title="Descargar PDF">
+        📄 <small>V{{ proyecto.cotizaciones.length }}</small>
+      </button>
+    }
+    <button class="btn-icon" (click)="editar.emit(proyecto)" title="Editar">✏️</button>
+    <button class="btn-icon btn-cancelar" (click)="cancelar.emit(proyecto)" title="Cancelar">🚫</button>
+  </div>
+
+  <div class="card-tag">{{ proyecto.estado }}</div>
+  <h4>{{ proyecto.nombre }}</h4>
+  
+  <div class="info-cliente">
+    <p>👤 {{ cliente?.nombre }}</p>
+    <p>📍 {{ proyecto.direccionVisita }}</p>
+  </div>
+
+  <div class="card-footer">
+    <span class="fecha">📅 {{ proyecto.fechaVisita | date:'dd MMM' }}</span>
+    <span class="monto">${{ proyecto.costoVisita }}</span>
+  </div>
+
+  @if (proyecto.estado === 'Cita') {
+    <button class="btn-accion" (click)="cotizar.emit(proyecto)">Cotizar</button>
+  }
+</article>

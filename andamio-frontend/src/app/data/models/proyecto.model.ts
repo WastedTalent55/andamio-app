@@ -24,7 +24,7 @@ export interface Cotizacion {
 export interface Proyecto {
   id: number;
   clienteId: number;
-  nombreProyecto: string;
+  nombre: string;
   fechaVisita: string;
   direccionVisita: string;
   costoVisita: number;
