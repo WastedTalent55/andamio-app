@@ -1,0 +1,89 @@
+.contenedor-proyectos {
+  padding: 20px;
+  
+  .header-seccion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+}
+
+.tablero-kanban {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.columna {
+  background: #f4f4f2; // Un gris crema muy suave
+  border-radius: 12px;
+  padding: 15px;
+  min-height: 500px;
+
+  .columna-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 0 5px;
+
+    h3 { margin: 0; font-size: 1.1rem; color: #444; }
+    .punto { width: 10px; height: 10px; border-radius: 50%; }
+    .evaluacion { background: #e67e22; }
+    .cotizacion { background: #3498db; }
+    .obra { background: #2ecc71; }
+  }
+}
+
+.card-proyecto {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  border-left: 4px solid #e67e22; // Color de la etapa
+
+  h4 { margin: 10px 0; color: #2c3e50; }
+  
+  .card-tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    background: #fff3e0;
+    color: #e67e22;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .info-cliente {
+    font-size: 0.9rem;
+    color: #666;
+    p { margin: 4px 0; }
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed #eee;
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+
+  .btn-accion {
+    width: 100%;
+    margin-top: 12px;
+    background: #2c3e50;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover { background: #e67e22; }
+  }
+}
