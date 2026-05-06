@@ -1,1 +1,80 @@
-<p>cotizacion-form works!</p>
+<div class="cotizacion-container">
+  <h2>Generar Cotización - {{ proyecto.nombre }}</h2>
+
+  <form [formGroup]="cotizacionForm">
+    <div class="tabla-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Descripción</th>
+            <th>Unidad</th>
+            <th>Cant.</th>
+            <th>Precio U.</th>
+            <th>Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody formArrayName="items">
+          @for (item of items.controls; track $index) {
+            <tr [formGroupName]="$index">
+              <td>
+                <select formControlName="tipo">
+                  <option value="Material">Material</option>
+                  <option value="Mano de Obra">Mano de Obra</option>
+                </select>
+              </td>
+              <td><input type="text" formControlName="descripcion" placeholder="Ej: Pintura Blanca"></td>
+              <td><input type="text" formControlName="unidad" placeholder="m2, pza..."></td>
+              <td><input type="number" formControlName="cantidad" class="input-corto"></td>
+              <td><input type="number" formControlName="precioUnitario" class="input-medio"></td>
+              <td class="col-total">
+                ${{ (item.get('cantidad')?.value * item.get('precioUnitario')?.value) | number:'1.2-2' }}
+              </td>
+              <td>
+                <button type="button" class="btn-eliminar" (click)="eliminarItem($index)">×</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <button type="button" class="btn-agregar" (click)="agregarItem()">
+      + Agregar Fila
+    </button>
+
+    <div class="resumen-cotizacion">
+      <div class="fila-resumen">
+        <span>Subtotal Obra:</span>
+        <span>${{ subtotal | number:'1.2-2' }}</span>
+      </div>
+      <div class="fila-resumen descuento">
+        <span>Costo Visita (A cuenta):</span>
+        <span>- ${{ proyecto.costoVisita | number:'1.2-2' }}</span>
+      </div>
+      <div class="fila-resumen total-final">
+        <span>Total Neto:</span>
+        <span>${{ totalNeto | number:'1.2-2' }}</span>
+      </div>
+
+      <div class="pagos-divididos">
+        <div class="pago-box">
+          <small>Anticipo (50%)</small>
+          <strong>${{ anticipo | number:'1.2-2' }}</strong>
+        </div>
+        <div class="pago-box">
+          <small>Finiquito (50%)</small>
+          <strong>${{ finiquito | number:'1.2-2' }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="acciones-form">
+      <button type="button" (click)="cancelar()">Cancelar</button>
+      <button type="button" class="btn-guardar" (click)="enviarCotizacion()" [disabled]="items.length === 0">
+        Guardar y Generar PDF
+      </button>
+    </div>
+  </form>
+</div>

@@ -4,10 +4,11 @@ import { Proyecto } from '../../../../data/models/proyecto.model';
 import { ProyectoFormComponent } from '../../components/proyecto-form/proyecto-form.component';
 import { DatePipe } from '@angular/common';
 import { ClienteService } from '../../../../data/services/cliente.service';
+import { CotizacionFormComponent } from '../../components/cotizacion-form/cotizacion-form.component';
 
 @Component({
   selector: 'app-list-proyectos',
-  imports: [ProyectoFormComponent, DatePipe],
+  imports: [ProyectoFormComponent, DatePipe, CotizacionFormComponent],
   templateUrl: './list-proyectos.component.html',
   styleUrl: './list-proyectos.component.scss'
 })
@@ -55,11 +56,6 @@ export class ListProyectosComponent implements OnInit {
   this.proyectoSeleccionado = undefined;
 }
 
-  prepararCotizacion(proyecto: Proyecto) {
-    console.log('Vamos a cotizar el proyecto:', proyecto.nombre);
-    // Por ahora solo el log para que el botón funcione
-  }
-
   cancelarProyecto(proyecto: Proyecto) {
   if (confirm(`¿Estás seguro de cancelar la evaluación de "${proyecto.nombre}"?`)) {
     // Actualizamos el estado
@@ -73,5 +69,36 @@ export class ListProyectosComponent implements OnInit {
   editarProyecto(proyecto: Proyecto) {
     this.proyectoSeleccionado = proyecto; // Pasamos el proyecto a editar
     this.mostrarModal = true;
+  }
+
+  // Variables de control
+mostrarModalCotizacion: boolean = false;
+proyectoParaCotizar?: Proyecto;
+
+  // Función para el botón "Cotizar" de la tarjeta
+  prepararCotizacion(proyecto: Proyecto) {
+    this.proyectoParaCotizar = proyecto;
+    this.mostrarModalCotizacion = true;
+  }
+
+  cerrarModalCotizacion() {
+    this.mostrarModalCotizacion = false;
+    this.proyectoParaCotizar = undefined;
+  }
+
+  actualizarProyectoConCotizacion(proyectoActualizado: Proyecto) {
+    // 1. Cambiamos el estado del proyecto para que se mueva de columna
+    proyectoActualizado.estado = 'Cotización';
+    
+    // 2. Guardamos los cambios en el LocalStorage a través del servicio
+    this.proyectoService.actualizarProyecto(proyectoActualizado);
+    
+    // 3. Refrescamos las listas del tablero
+    this.cargarProyectos();
+    
+    // 4. Cerramos el modal
+    this.cerrarModalCotizacion();
+    
+    console.log('¡Proyecto movido a Cotización!', proyectoActualizado);
   }
 }

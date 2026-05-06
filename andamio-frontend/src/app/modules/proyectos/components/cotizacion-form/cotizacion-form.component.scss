@@ -1,0 +1,44 @@
+.cotizacion-container {
+  max-width: 900px; // Un poco más ancho para la tabla
+  
+  .tabla-scroll {
+    overflow-x: auto;
+    margin: 20px 0;
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      
+      th { text-align: left; padding: 10px; border-bottom: 2px solid #eee; }
+      td { padding: 8px; border-bottom: 1px solid #eee; }
+    }
+  }
+
+  input, select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+  }
+
+  .resumen-cotizacion {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+
+    .fila-resumen {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      
+      &.total-final {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #2c3e50;
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+      }
+    }
+  }
+}
