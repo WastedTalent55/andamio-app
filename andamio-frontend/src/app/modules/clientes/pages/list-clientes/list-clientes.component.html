@@ -7,6 +7,7 @@
   <div class="grid-clientes">
     @for (cliente of misClientes; track cliente.id) {
       <article class="tarjeta-cliente">
+        <button class="btn-editar" (click)="prepararEdicion(cliente)">✎</button>
         <button class="btn-eliminar" (click)="confirmarEliminar(cliente)">×</button>
         <div class="avatar-cliente">{{ cliente.nombre[0] }}</div>
         <div class="info-cliente">
@@ -34,6 +35,7 @@
   </div>
   @if (mostrarModal) {
     <app-cliente-form 
+      [clienteAEditar]="clienteSeleccionado"
       (cerrar)="mostrarModal = false" 
       (clienteGuardado)="agregarALista($event)">
     </app-cliente-form>

@@ -31,4 +31,13 @@ export class ClienteService {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(clientes));
     }
   }
+
+  actualizarCliente(clienteActualizado: Cliente): void {
+    const clientes = this.getClientes();
+    const index = clientes.findIndex(c => c.id === clienteActualizado.id);
+    if (index !== -1) {
+      clientes[index] = clienteActualizado;
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(clientes));
+    }
+  }
 }

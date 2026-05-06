@@ -23,11 +23,7 @@ export class ListClientesComponent implements OnInit {
     this.misClientes = this.clienteService.getClientes().filter(c => c.estaActivo);
   }
 
-  agregarALista(nuevo: Cliente) {
-    this.clienteService.agregarCliente(nuevo); // Guarda en LocalStorage
-    this.cargarClientes(); // Refresca la lista
-    this.mostrarModal = false;
-  }
+ 
 
   confirmarEliminar(cliente: Cliente) {
     const siEliminar = confirm(`¿Seguro que quieres quitar a ${cliente.nombre} de tu lista? No se borrarán sus proyectos pasados, pero ya no lo verás aquí.`);
@@ -36,5 +32,29 @@ export class ListClientesComponent implements OnInit {
       this.clienteService.desactivarCliente(cliente.id);
       this.cargarClientes(); // Recargamos la lista filtrada
     }
+  }
+
+  clienteSeleccionado?: Cliente;
+
+  prepararEdicion(cliente: Cliente) {
+    this.clienteSeleccionado = cliente;
+    this.mostrarModal = true;
+  }
+
+  // Modifica tu función de guardado para que limpie la selección
+  agregarALista(cliente: Cliente) {
+    if (this.clienteSeleccionado) {
+      this.clienteService.actualizarCliente(cliente);
+    } else {
+      this.clienteService.agregarCliente(cliente);
+    }
+    this.clienteSeleccionado = undefined; // Limpiar
+    this.cargarClientes();
+    this.mostrarModal = false;
+  }
+
+  cerrarModalLimpiando() {
+    this.mostrarModal = false;
+    this.clienteSeleccionado = undefined; // ¡Limpieza de seguridad!
   }
 }
