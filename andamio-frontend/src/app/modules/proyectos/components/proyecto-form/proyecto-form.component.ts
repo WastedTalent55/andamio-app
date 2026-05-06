@@ -31,7 +31,7 @@ export class ProyectoFormComponent implements OnInit {
     // 2. Inicializar el formulario
     this.proyectoForm = this.fb.group({
       clienteId: ['', Validators.required],
-      nombreProyecto: ['', Validators.required],
+      nombre: ['', Validators.required],
       fechaVisita: ['', Validators.required],
       direccionVisita: ['', Validators.required],
       costoVisita: [0, [Validators.required, Validators.min(0)]]
