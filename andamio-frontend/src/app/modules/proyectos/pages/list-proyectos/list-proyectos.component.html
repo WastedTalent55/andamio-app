@@ -1,1 +1,11 @@
-<p>list-proyectos works!</p>
+<header class="header-seccion">
+  <h1>Gestión de Proyectos</h1>
+  <button class="btn-nuevo" (click)="mostrarModal = true">+ Nueva Evaluación</button>
+</header>
+
+@if (mostrarModal) {
+  <app-proyecto-form 
+    (proyectoGuardado)="agregarProyectoALista($event)" 
+    (cerrar)="mostrarModal = false">
+  </app-proyecto-form>
+}
