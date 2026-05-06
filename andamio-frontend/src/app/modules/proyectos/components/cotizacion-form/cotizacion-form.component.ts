@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Proyecto, Cotizacion } from '../../../../data/models/proyecto.model';
+import { PdfService } from '../../../../data/services/pdf.service';
 
 @Component({
   selector: 'app-cotizacion-form',
@@ -23,7 +24,9 @@ export class CotizacionFormComponent implements OnInit {
   anticipo: number = 0;
   finiquito: number = 0;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder,
+              private pdfService: PdfService
+  ) {}
 
   ngOnInit(): void {
     this.cotizacionForm = this.fb.group({
@@ -82,22 +85,27 @@ export class CotizacionFormComponent implements OnInit {
 
   // Método para el botón del HTML
   enviarCotizacion() {
-    if (this.cotizacionForm.valid) {
-      const nuevaCotizacion = {
-        items: this.cotizacionForm.value.items,
-        subtotal: this.subtotal,
-        totalNeto: this.totalNeto,
-        anticipo: this.anticipo,
-        finiquito: this.finiquito,
-        fecha: new Date()
-      };
-      
-      console.log('¡Cotización generada!', nuevaCotizacion);
-      this.cotizacionGuardada.emit(nuevaCotizacion);
-      this.cerrar.emit();
-    } else {
-      alert('Por favor, completa los campos obligatorios de la tabla.');
+    // 1. Creamos el objeto de cotización con los totales actuales
+    const nuevaCotizacion: Cotizacion = {
+      version: (this.proyecto?.cotizaciones?.length || 0) + 1,
+      items: this.items.value,
+      subtotal: this.subtotal,
+      descuento: this.proyecto?.costoVisita || 0,
+      totalObra: this.subtotal,
+      totalNeto: this.totalNeto,
+      anticipo: this.anticipo,
+      finiquito: this.finiquito,
+      fechaCreacion: new Date()
+    };
+
+    // 2. Disparamos la generación del PDF
+    if (this.proyecto) {
+      this.pdfService.generarCotizacionPDF(this.proyecto, nuevaCotizacion);
     }
+
+    // 3. Emitimos para guardar en la lista
+    this.cotizacionGuardada.emit(nuevaCotizacion);
+    this.cerrar.emit();
   }
 
   cancelar() {
