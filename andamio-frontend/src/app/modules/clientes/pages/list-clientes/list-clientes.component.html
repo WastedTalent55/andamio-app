@@ -5,21 +5,30 @@
   </header>
 
   <div class="grid-clientes">
-    <article class="tarjeta-cliente">
-      <div class="avatar-cliente">A</div>
-      <div class="info-cliente">
-        <h2>Alex Soler</h2>
-        <p class="etiqueta">Contacto directo</p>
-        <span class="dato">55 1234 5678</span>
-        
-        <p class="etiqueta">Dirección</p>
-        <span class="dato">Calle Falsa 123, Col. Centro</span>
-      </div>
-      <div class="acciones-tarjeta">
-        <button class="btn-secundario">Ver direcciones</button>
-        <button class="btn-primario">Nuevo Proyecto</button>
-      </div>
-    </article>
-    
-    </div>
+    @for (cliente of misClientes; track cliente.id) {
+      <article class="tarjeta-cliente">
+        <div class="avatar-cliente">{{ cliente.nombre[0] }}</div>
+        <div class="info-cliente">
+          <h2>{{ cliente.nombre }}</h2>
+          <p class="etiqueta">Contacto</p>
+          <span class="dato">{{ cliente.contacto }}</span>
+          
+          <p class="etiqueta">Dirección</p>
+          <span class="dato">{{ cliente.ubicaciones[0] }}</span>
+          @if (cliente.ubicaciones.length > 1) {
+            <p class="info-extra">
+              + {{ cliente.ubicaciones.length - 1 }} dirección(es) más
+            </p>
+          }
+        </div>
+
+        <div class="acciones-tarjeta">
+          <button class="btn-secundario">Ver direcciones</button>
+          <button class="btn-primario">Nuevo Proyecto</button>
+        </div>
+      </article>
+    } @empty {
+      <p>Aún no tienes clientes registrados.</p>
+    }
+  </div>
 </div>
