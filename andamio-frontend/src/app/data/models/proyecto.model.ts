@@ -17,3 +17,27 @@ export interface Proyecto {
   fechaEntregaTentativa?: Date;
   notasLevantamiento?: string;
 }
+
+// Manejo de cotizaciones
+
+export interface ItemCotizacion {
+  tipo: 'Material' | 'Mano de Obra';
+  descripcion: string;
+  unidad: string; // m2, litros, servicio, etc.
+  cantidad: number;
+  precioUnitario: number;
+  total: number;
+}
+
+export interface Cotizacion {
+  version: number;
+  items: ItemCotizacion[];
+  subtotal: number;
+  descuento: number;
+  totalObra: number;
+  totalNeto: number; // Ya restando la visita
+  anticipo: number;
+  finiquito: number;
+  fechaCreacion: Date;
+}
+
