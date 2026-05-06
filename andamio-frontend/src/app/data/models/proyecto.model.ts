@@ -1,29 +1,9 @@
-export interface Proyecto {
-  id: number;
-  clienteId: number;
-  nombre: string;
-  estado: 'Cita' | 'Cotización' | 'En Progreso' | 'Finalizado' | 'Cancelado';
-  
-  // Datos de la Visita de Evaluación
-  fechaVisita: Date;
-  direccionVisita: string;
-  costoVisita: number;
-  
-  // Datos de Cotización (Se llenan después)
-  costoTotalObra?: number;
-  anticipo?: number;
-  finiquito?: number;
-  fechaInicio?: Date;
-  fechaEntregaTentativa?: Date;
-  notasLevantamiento?: string;
-}
-
-// Manejo de cotizaciones
+// data/models/proyecto.model.ts
 
 export interface ItemCotizacion {
   tipo: 'Material' | 'Mano de Obra';
   descripcion: string;
-  unidad: string; // m2, litros, servicio, etc.
+  unidad: string;
   cantidad: number;
   precioUnitario: number;
   total: number;
@@ -35,9 +15,19 @@ export interface Cotizacion {
   subtotal: number;
   descuento: number;
   totalObra: number;
-  totalNeto: number; // Ya restando la visita
+  totalNeto: number;
   anticipo: number;
   finiquito: number;
   fechaCreacion: Date;
 }
 
+export interface Proyecto {
+  id: number;
+  clienteId: number;
+  nombreProyecto: string;
+  fechaVisita: string;
+  direccionVisita: string;
+  costoVisita: number;
+  estado: 'Cita' | 'Cotización' | 'En Progreso' | 'Finalizado' | 'Cancelado';
+  cotizaciones?: Cotizacion[]; // <--- Asegúrate de que esta línea esté ahí
+}

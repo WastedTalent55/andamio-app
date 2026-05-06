@@ -14,8 +14,7 @@ import { PdfService } from '../../../../data/services/pdf.service';
 export class CotizacionFormComponent implements OnInit {
   @Input() proyecto!: Proyecto; 
   @Output() cerrar = new EventEmitter<void>();
-  @Output() cotizacionGuardada = new EventEmitter<any>(); // Cambié el nombre para no chocar con el método
-
+  @Output() cotizacionGuardada = new EventEmitter<Cotizacion>(); 
   cotizacionForm!: FormGroup;
 
   // Variables para los cálculos que se muestran en el HTML
@@ -106,6 +105,8 @@ export class CotizacionFormComponent implements OnInit {
     // 3. Emitimos para guardar en la lista
     this.cotizacionGuardada.emit(nuevaCotizacion);
     this.cerrar.emit();
+
+    this.cotizacionGuardada.emit(nuevaCotizacion);
   }
 
   cancelar() {
