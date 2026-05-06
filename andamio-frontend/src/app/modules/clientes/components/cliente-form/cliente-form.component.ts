@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, SimpleChange, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Cliente } from '../../../../data/models/cliente.model';
 
@@ -16,11 +16,13 @@ export class ClienteFormComponent implements OnInit {
   @Input() clienteAEditar?: Cliente;
 
   ngOnInit(): void {
-    this.clienteForm = this.fb.group({
-      nombre: [this.clienteAEditar?.nombre || '', Validators.required],
-      contacto: [this.clienteAEditar?.contacto || '', Validators.required],
-      direccion: [this.clienteAEditar?.ubicaciones[0] || '', Validators.required]
-    });
+    this.inicializarFormulario();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['clienteAEditar']) {
+      this.inicializarFormulario();
+    }
   }
 
   clienteForm: FormGroup;
@@ -30,6 +32,14 @@ export class ClienteFormComponent implements OnInit {
       nombre: ['', Validators.required],
       contacto: ['', Validators.required],
       direccion: ['', Validators.required]
+    });
+  }
+
+  inicializarFormulario() {
+    this.clienteForm = this.fb.group({
+      nombre: [this.clienteAEditar?.nombre || '', Validators.required],
+      contacto: [this.clienteAEditar?.contacto || '', Validators.required],
+      direccion: [this.clienteAEditar?.ubicaciones[0] || '', Validators.required]
     });
   }
 

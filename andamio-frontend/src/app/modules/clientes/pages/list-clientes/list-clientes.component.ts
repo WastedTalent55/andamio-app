@@ -23,8 +23,6 @@ export class ListClientesComponent implements OnInit {
     this.misClientes = this.clienteService.getClientes().filter(c => c.estaActivo);
   }
 
- 
-
   confirmarEliminar(cliente: Cliente) {
     const siEliminar = confirm(`¿Seguro que quieres quitar a ${cliente.nombre} de tu lista? No se borrarán sus proyectos pasados, pero ya no lo verás aquí.`);
     
@@ -41,7 +39,6 @@ export class ListClientesComponent implements OnInit {
     this.mostrarModal = true;
   }
 
-  // Modifica tu función de guardado para que limpie la selección
   agregarALista(cliente: Cliente) {
     if (this.clienteSeleccionado) {
       this.clienteService.actualizarCliente(cliente);
@@ -56,5 +53,10 @@ export class ListClientesComponent implements OnInit {
   cerrarModalLimpiando() {
     this.mostrarModal = false;
     this.clienteSeleccionado = undefined; // ¡Limpieza de seguridad!
+  }
+
+  abrirModalNuevo() {
+    this.clienteSeleccionado = undefined; // Nos aseguramos de que no haya nadie seleccionado
+    this.mostrarModal = true;
   }
 }

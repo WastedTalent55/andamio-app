@@ -1,7 +1,11 @@
 <div class="modal-overlay">
   <div class="modal-contenedor">
     <header class="modal-header">
-      <h2>Nuevo Clientx</h2>
+      @if (clienteAEditar) {
+        <h2>Editar Clientx</h2>
+      } @else {
+        <h2>Nuevo Clientx</h2>
+      }
       <button class="btn-cerrar" (click)="cancelar()">×</button>
     </header>
 
