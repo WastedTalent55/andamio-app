@@ -1,9 +1,22 @@
 import { Injectable } from '@angular/core';
+import { Proyecto } from '../models/proyecto.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProyectoService {
+  private readonly STORAGE_KEY = 'andamio_proyectos';
 
   constructor() { }
+
+  getProyectos(): Proyecto[] {
+    const data = localStorage.getItem(this.STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+  }
+
+  guardarProyecto(proyecto: Proyecto): void {
+    const proyectos = this.getProyectos();
+    proyectos.push(proyecto);
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(proyectos));
+  }
 }
