@@ -1,7 +1,7 @@
 <div class="contenedor-clientes">
   <header class="header-seccion">
     <h1>Mis Clientes</h1>
-    <button class="btn-nuevo">+ Agregar cliente</button>
+    <button class="btn-nuevo" (click)="mostrarModal = true">+ Agregar cliente</button>
   </header>
 
   <div class="grid-clientes">
@@ -31,4 +31,10 @@
       <p>Aún no tienes clientes registrados.</p>
     }
   </div>
+  @if (mostrarModal) {
+    <app-cliente-form 
+      (cerrar)="mostrarModal = false" 
+      (clienteGuardado)="agregarALista($event)">
+    </app-cliente-form>
+  }
 </div>

@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { Cliente } from '../../../../data/models/cliente.model';
+import { ClienteFormComponent } from '../../components/cliente-form/cliente-form.component';
 
 @Component({
   selector: 'app-list-clientes',
-  imports: [],
+  imports: [ClienteFormComponent],
   templateUrl: './list-clientes.component.html',
   styleUrl: './list-clientes.component.scss'
 })
@@ -22,4 +23,11 @@ export class ListClientesComponent {
       ubicaciones: ['Taller de Costura, Int 4']
     }
   ];
+
+  mostrarModal = false;
+
+agregarALista(nuevo: Cliente) {
+  this.misClientes.push(nuevo);
+  this.mostrarModal = false;
+}
 }

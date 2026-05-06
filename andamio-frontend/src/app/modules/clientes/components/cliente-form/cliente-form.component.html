@@ -1,1 +1,33 @@
-<p>cliente-form works!</p>
+<div class="modal-overlay">
+  <div class="modal-contenedor">
+    <header class="modal-header">
+      <h2>Nuevo Clientx</h2>
+      <button class="btn-cerrar" (click)="cancelar()">×</button>
+    </header>
+
+    <form [formGroup]="clienteForm" (ngSubmit)="enviar()">
+      <div class="campo">
+        <label>Nombre</label>
+        <input type="text" formControlName="nombre">
+        @if (clienteForm.get('nombre')?.invalid && clienteForm.get('nombre')?.touched) {
+          <small class="error">El nombre es obligatorio</small>
+        }
+      </div>
+
+      <div class="campo">
+        <label>Contacto</label>
+        <input type="text" formControlName="contactoDirecto">
+      </div>
+
+      <div class="campo">
+        <label>Dirección principal</label>
+        <input type="text" formControlName="direccion">
+      </div>
+
+      <div class="modal-acciones">
+        <button type="button" class="btn-cancelar" (click)="cancelar()">Cancelar</button>
+        <button type="submit" class="btn-guardar" [disabled]="clienteForm.invalid">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
