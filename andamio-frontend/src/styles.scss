@@ -1,1 +1,28 @@
-/* You can add global styles to this file, and also import other style files */
+// Paleta Artesanal de Andamio
+$crema: #FDF8F1;
+$verde-bosque: #2D4F1E;
+$terracota: #E2725B;
+$gris-piedra: #4A4A4A;
+
+body {
+  background-color: $crema;
+  font-family: 'Inter', sans-serif; // O la que prefieras
+  color: $verde-bosque;
+  margin: 0;
+}
+
+.header-seccion {
+    display: flex;
+    justify-content: space-between;
+    padding: 2rem;
+}
+
+.btn-nuevo {
+  background: #E2725B;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}

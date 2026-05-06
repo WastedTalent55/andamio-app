@@ -1,0 +1,48 @@
+.grid-clientes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.tarjeta-cliente {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  padding: 20px;
+  box-shadow: 4px 4px 0px #2D4F1E; // Sombra sólida para el look artesanal
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  .avatar-cliente {
+    background: #E2725B;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  h2 {
+    margin: 0 0 10px 0;
+    color: #2D4F1E;
+  }
+
+  .etiqueta {
+    font-size: 0.8rem;
+    color: #4A4A4A;
+    margin: 10px 0 2px 0;
+    font-style: italic;
+  }
+
+  .dato {
+    font-weight: 500;
+  }
+}
