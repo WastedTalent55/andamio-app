@@ -2,7 +2,7 @@ export interface Proyecto {
   id: number;
   clienteId: number;
   nombre: string;
-  estado: 'Cita' | 'Cotización' | 'En Progreso' | 'Finalizado';
+  estado: 'Cita' | 'Cotización' | 'En Progreso' | 'Finalizado' | 'Cancelado';
   
   // Datos de la Visita de Evaluación
   fechaVisita: Date;

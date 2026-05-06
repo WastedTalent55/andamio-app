@@ -1,9 +1,8 @@
+<header class="header-seccion">
+  <h1>Tablero de Proyectos</h1>
+  <button class="btn-nuevo" (click)="abrirModal()">+ Nueva Evaluación</button>
+</header>
 <div class="contenedor-proyectos">
-  <header class="header-seccion">
-    <h2>Tablero de Proyectos</h2>
-    <button class="btn-nuevo" (click)="abrirModal()">+ Nueva Evaluación</button>
-  </header>
-
   <div class="tablero-kanban">
     <section class="columna">
       <div class="columna-header">
@@ -16,6 +15,12 @@
         @for (p of proyectosEvaluacion; track p.id) {
           @let cliente = getDatosCliente(p.clienteId);
           <article class="card-proyecto">
+
+            <div class="card-acciones">
+              <button class="btn-icon" (click)="editarProyecto(p)" title="Editar">✏️</button>
+              <button class="btn-icon btn-cancelar" (click)="cancelarProyecto(p)" title="Cancelar">🚫</button>
+            </div>
+
             <div class="card-tag">Cita</div>
             <h4>{{ p.nombre }}</h4>
             <div class="info-cliente">
@@ -53,3 +58,15 @@
     </section>
   </div>
 </div>
+
+@if (mostrarModal) {
+  <div class="modal-overlay">
+    <div class="modal-contenedor">
+      <app-proyecto-form 
+        [proyectoAEditar]="proyectoSeleccionado"
+        (proyectoGuardado)="agregarProyectoALista($event)" 
+        (cerrar)="cerrarModal()">
+      </app-proyecto-form>
+    </div>
+  </div>
+}

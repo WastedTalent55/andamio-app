@@ -1,12 +1,5 @@
 .contenedor-proyectos {
   padding: 20px;
-  
-  .header-seccion {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-  }
 }
 
 .tablero-kanban {
@@ -44,6 +37,28 @@
   margin-bottom: 12px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   border-left: 4px solid #e67e22; // Color de la etapa
+  position: relative;
+
+  .card-acciones {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 5px;
+
+    .btn-icon {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 2px;
+      border-radius: 4px;
+      transition: background 0.2s;
+
+      &:hover { background: #eee; }
+      &.btn-cancelar:hover { background: #ffdada; }
+    }
+  }
 
   h4 { margin: 10px 0; color: #2c3e50; }
   

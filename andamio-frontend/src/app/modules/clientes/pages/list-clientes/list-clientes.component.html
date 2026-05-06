@@ -1,9 +1,8 @@
+<header class="header-seccion">
+  <h1>Mis Clientes</h1>
+  <button class="btn-nuevo" (click)="abrirModalNuevo()">+ Agregar cliente</button>
+</header>
 <div class="contenedor-clientes">
-  <header class="header-seccion">
-    <h1>Mis Clientes</h1>
-    <button class="btn-nuevo" (click)="abrirModalNuevo()">+ Agregar cliente</button>
-  </header>
-
   <div class="grid-clientes">
     @for (cliente of misClientes; track cliente.id) {
       <article class="tarjeta-cliente">

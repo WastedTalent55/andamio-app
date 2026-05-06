@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ClienteService } from '../../../../data/services/cliente.service';
 import { ProyectoService } from '../../../../data/services/proyecto.service';
 import { Cliente } from '../../../../data/models/cliente.model';
+import { Proyecto } from '../../../../data/models/proyecto.model';
 
 @Component({
   selector: 'app-proyecto-form',
@@ -11,6 +12,7 @@ import { Cliente } from '../../../../data/models/cliente.model';
   templateUrl: './proyecto-form.component.html'
 })
 export class ProyectoFormComponent implements OnInit {
+  @Input() proyectoAEditar?: Proyecto;
   @Output() proyectoGuardado = new EventEmitter<any>();
   @Output() cerrar = new EventEmitter<void>();
 
@@ -41,7 +43,21 @@ export class ProyectoFormComponent implements OnInit {
     this.proyectoForm.get('clienteId')?.valueChanges.subscribe(id => {
       this.actualizarDirecciones(id);
     });
+
+    if (this.proyectoAEditar) {
+      this.proyectoForm.patchValue({
+        clienteId: this.proyectoAEditar.clienteId,
+        nombreProyecto: this.proyectoAEditar.nombre,
+        fechaVisita: this.proyectoAEditar.fechaVisita,
+        direccionVisita: this.proyectoAEditar.direccionVisita,
+        costoVisita: this.proyectoAEditar.costoVisita
+      });
+      
+      // Forzamos la actualización de direcciones basada en el cliente cargado
+      this.actualizarDirecciones(this.proyectoAEditar.clienteId.toString());
+    }
   }
+  
 
   actualizarDirecciones(clienteId: string) {
     const cliente = this.clientesDisponibles.find(c => c.id === Number(clienteId));
@@ -56,21 +72,32 @@ export class ProyectoFormComponent implements OnInit {
 
   guardar() {
     if (this.proyectoForm.valid) {
-      const nuevoProyecto = {
-        ...this.proyectoForm.value,
-        id: Date.now(),
-        estado: 'Cita'
-      };
       
-      console.log('¡Proyecto listo para la obra!', nuevoProyecto);
-      
-      this.proyectoService.guardarProyecto(nuevoProyecto);
-      
-      // CAMBIO AQUÍ: Usa el nombre que declaraste arriba en el @Output
-      this.proyectoGuardado.emit(nuevoProyecto); 
+      if (this.proyectoAEditar) {
+        // --- MODO EDICIÓN ---
+        const proyectoActualizado = {
+          ...this.proyectoAEditar, // Mantenemos el ID original y el estado actual
+          ...this.proyectoForm.value // Sobrescribimos con lo que hay en el formulario
+        };
+        
+        this.proyectoService.actualizarProyecto(proyectoActualizado); // Usamos actualizar
+        this.proyectoGuardado.emit(proyectoActualizado);
+        
+      } else {
+        // --- MODO CREACIÓN ---
+        const nuevoProyecto = {
+          ...this.proyectoForm.value,
+          id: Date.now(), // Generamos ID solo si es nuevo
+          estado: 'Cita'
+        };
+        
+        this.proyectoService.guardarProyecto(nuevoProyecto);
+        this.proyectoGuardado.emit(nuevoProyecto);
+      }
       
       this.proyectoForm.reset();
-      this.cerrar.emit(); // También emitimos cerrar para que se quite el modal
+      this.cerrar.emit(); 
+      
     } else {
       alert('¡Cuidado! Te faltan campos por llenar.');
     }

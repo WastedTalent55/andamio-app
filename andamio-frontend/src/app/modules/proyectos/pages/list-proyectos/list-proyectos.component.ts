@@ -15,6 +15,7 @@ export class ListProyectosComponent implements OnInit {
   proyectosEvaluacion: Proyecto[] = [];
   proyectosCotizacion: Proyecto[] = [];
   proyectosEnObra: Proyecto[] = [];
+  proyectoSeleccionado?: Proyecto;
   mostrarModal = false;
 
   constructor(private proyectoService: ProyectoService,
@@ -45,11 +46,32 @@ export class ListProyectosComponent implements OnInit {
   }
   
   abrirModal() {
+    this.proyectoSeleccionado = undefined;
     this.mostrarModal = true;
   }
+
+  cerrarModal() {
+  this.mostrarModal = false;
+  this.proyectoSeleccionado = undefined;
+}
 
   prepararCotizacion(proyecto: Proyecto) {
     console.log('Vamos a cotizar el proyecto:', proyecto.nombre);
     // Por ahora solo el log para que el botón funcione
+  }
+
+  cancelarProyecto(proyecto: Proyecto) {
+  if (confirm(`¿Estás seguro de cancelar la evaluación de "${proyecto.nombre}"?`)) {
+    // Actualizamos el estado
+    proyecto.estado = 'Cancelado'; 
+    // Guardamos el cambio en el servicio (necesitaremos un método update)
+    this.proyectoService.actualizarProyecto(proyecto);
+    this.cargarProyectos(); // Refrescar tablero
+  }
+}
+
+  editarProyecto(proyecto: Proyecto) {
+    this.proyectoSeleccionado = proyecto; // Pasamos el proyecto a editar
+    this.mostrarModal = true;
   }
 }

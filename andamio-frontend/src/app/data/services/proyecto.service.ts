@@ -19,4 +19,13 @@ export class ProyectoService {
     proyectos.push(proyecto);
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(proyectos));
   }
+
+  actualizarProyecto(proyectoActualizado: Proyecto): void {
+  const proyectos = this.getProyectos();
+  const index = proyectos.findIndex(p => p.id === proyectoActualizado.id);
+  if (index !== -1) {
+    proyectos[index] = proyectoActualizado;
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(proyectos));
+  }
+}
 }
