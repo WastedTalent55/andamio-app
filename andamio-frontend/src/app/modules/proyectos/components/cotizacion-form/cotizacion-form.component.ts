@@ -97,11 +97,6 @@ export class CotizacionFormComponent implements OnInit {
       fechaCreacion: new Date()
     };
 
-    // 2. Disparamos la generación del PDF
-    if (this.proyecto) {
-      this.pdfService.generarCotizacionPDF(this.proyecto, nuevaCotizacion);
-    }
-
     // 3. Emitimos para guardar en la lista
     this.cotizacionGuardada.emit(nuevaCotizacion);
     this.cerrar.emit();

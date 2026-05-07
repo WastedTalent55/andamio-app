@@ -5,10 +5,9 @@ import { CommonModule, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-card-proyecto',
-  standalone: true,
   imports: [CommonModule, DatePipe],
   templateUrl: './card-proyecto.component.html',
-  styleUrl: './card-proyecto.component.css'
+  styleUrl: './card-proyecto.component.scss'
 })
 export class CardProyectoComponent {
   @Input() proyecto!: Proyecto;

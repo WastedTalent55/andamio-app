@@ -1,7 +1,7 @@
 <article class="card-proyecto">
   <div class="card-acciones">
     @if (proyecto.cotizaciones && proyecto.cotizaciones.length > 0) {
-      <button class="btn-pdf-descarga" (click)="descargarPDF($event)" title="Descargar PDF">
+      <button class="btn-pdf" (click)="descargarPDF($event)" title="Descargar PDF">
         📄 <small>V{{ proyecto.cotizaciones.length }}</small>
       </button>
     }

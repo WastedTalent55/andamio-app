@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProyectoService } from '../../../../data/services/proyecto.service';
 import { Proyecto } from '../../../../data/models/proyecto.model';
+import { Cotizacion } from '../../../../data/models/proyecto.model';
 import { ProyectoFormComponent } from '../../components/proyecto-form/proyecto-form.component';
 import { ClienteService } from '../../../../data/services/cliente.service';
 import { CotizacionFormComponent } from '../../components/cotizacion-form/cotizacion-form.component';
@@ -86,19 +87,29 @@ proyectoParaCotizar?: Proyecto;
     this.proyectoParaCotizar = undefined;
   }
 
-  actualizarProyectoConCotizacion(nuevaCotizacion: any) {
+  // En list-proyectos.component.ts
+
+actualizarProyectoConCotizacion(nuevaCotizacion: Cotizacion) {
   if (this.proyectoParaCotizar) {
-    // 1. Le agregamos la cotización al proyecto
+    // 1. Inicializar el array de cotizaciones si no existe
     if (!this.proyectoParaCotizar.cotizaciones) {
       this.proyectoParaCotizar.cotizaciones = [];
     }
+
+    // 2. Agregar la nueva cotización
     this.proyectoParaCotizar.cotizaciones.push(nuevaCotizacion);
 
-    // 2. Cambiamos el estado para que se mueva de columna si quieres
+    // 3. Cambiar el estado del proyecto para que se mueva a la siguiente columna
     this.proyectoParaCotizar.estado = 'Cotización';
-    
-    // 3. Cerramos el modal
+
+    // 4. (Opcional) Re-asignamos el array para que Angular detecte el cambio 
+    // y el icono aparezca de inmediato en la tarjeta
+    this.proyectosEvaluacion = [...this.proyectosEvaluacion]; 
+
+    // 5. Cerramos el modal
     this.cerrarModalCotizacion();
+    
+    console.log('Proyecto actualizado con éxito:', this.proyectoParaCotizar);
   }
 }
 }
