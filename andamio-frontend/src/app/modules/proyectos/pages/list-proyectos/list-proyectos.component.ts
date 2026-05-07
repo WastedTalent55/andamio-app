@@ -6,6 +6,7 @@ import { ProyectoFormComponent } from '../../components/proyecto-form/proyecto-f
 import { ClienteService } from '../../../../data/services/cliente.service';
 import { CotizacionFormComponent } from '../../components/cotizacion-form/cotizacion-form.component';
 import { CardProyectoComponent } from '../../components/card-proyecto/card-proyecto.component';
+import { StorageService } from '../../../../data/services/storage.service';
 
 @Component({
   selector: 'app-list-proyectos',
@@ -14,6 +15,7 @@ import { CardProyectoComponent } from '../../components/card-proyecto/card-proye
   styleUrl: './list-proyectos.component.scss'
 })
 export class ListProyectosComponent implements OnInit {
+  proyectos: Proyecto[] = [];
   proyectosEvaluacion: Proyecto[] = [];
   proyectosCotizacion: Proyecto[] = [];
   proyectosEnObra: Proyecto[] = [];
@@ -21,7 +23,8 @@ export class ListProyectosComponent implements OnInit {
   mostrarModal = false;
 
   constructor(private proyectoService: ProyectoService,
-              private clienteService: ClienteService
+              private clienteService: ClienteService,
+              private storageService: StorageService
   ) {}
 
   ngOnInit(): void {
@@ -91,25 +94,24 @@ proyectoParaCotizar?: Proyecto;
 
 actualizarProyectoConCotizacion(nuevaCotizacion: Cotizacion) {
   if (this.proyectoParaCotizar) {
-    // 1. Inicializar el array de cotizaciones si no existe
+    // 1. Aseguramos el array
     if (!this.proyectoParaCotizar.cotizaciones) {
       this.proyectoParaCotizar.cotizaciones = [];
     }
 
-    // 2. Agregar la nueva cotización
+    // 2. Metemos la cotización y cambiamos estado
     this.proyectoParaCotizar.cotizaciones.push(nuevaCotizacion);
-
-    // 3. Cambiar el estado del proyecto para que se mueva a la siguiente columna
     this.proyectoParaCotizar.estado = 'Cotización';
 
-    // 4. (Opcional) Re-asignamos el array para que Angular detecte el cambio 
-    // y el icono aparezca de inmediato en la tarjeta
-    this.proyectosEvaluacion = [...this.proyectosEvaluacion]; 
+    // 3. ¡IMPORTANTE! Actualizamos el servicio PRIMERO
+    this.proyectoService.actualizarProyecto(this.proyectoParaCotizar);
 
-    // 5. Cerramos el modal
+    // 4. Forzamos la recarga desde el servicio para que las columnas 
+    // tengan la data que el servicio acaba de guardar en LocalStorage
+    this.cargarProyectos(); 
+
+    // 5. Cerramos modal
     this.cerrarModalCotizacion();
-    
-    console.log('Proyecto actualizado con éxito:', this.proyectoParaCotizar);
   }
 }
 }

@@ -1,31 +1,37 @@
 import { Injectable } from '@angular/core';
 import { Proyecto } from '../models/proyecto.model';
+import { StorageService } from './storage.service'; 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProyectoService {
-  private readonly STORAGE_KEY = 'andamio_proyectos';
+  private proyectos: Proyecto[] = [];
 
-  constructor() { }
+  constructor(private storageService: StorageService) { 
+    // Cargamos lo que haya guardado al iniciar
+    this.proyectos = this.storageService.obtenerProyectos();
+  }
 
   getProyectos(): Proyecto[] {
-    const data = localStorage.getItem(this.STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
+    return this.proyectos;
   }
 
   guardarProyecto(proyecto: Proyecto): void {
-    const proyectos = this.getProyectos();
-    proyectos.push(proyecto);
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(proyectos));
+    // 1. Agregamos al arreglo local
+    this.proyectos.push(proyecto);
+    // 2. Le decimos al storage que actualice la foto completa
+    this.storageService.guardarProyectos(this.proyectos);
   }
 
-  actualizarProyecto(proyectoActualizado: Proyecto): void {
-  const proyectos = this.getProyectos();
-  const index = proyectos.findIndex(p => p.id === proyectoActualizado.id);
+  actualizarProyecto(proyecto: Proyecto): void {
+  const index = this.proyectos.findIndex(p => p.id === proyecto.id);
   if (index !== -1) {
-    proyectos[index] = proyectoActualizado;
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(proyectos));
+    // Clonamos el objeto para romper la referencia y asegurar que Angular detecte cambios
+    this.proyectos[index] = { ...proyecto }; 
+    // Guardamos la foto completa y actualizada en LocalStorage
+    this.storageService.guardarProyectos(this.proyectos);
+    console.log('Storage actualizado con:', this.proyectos);
   }
 }
 }
