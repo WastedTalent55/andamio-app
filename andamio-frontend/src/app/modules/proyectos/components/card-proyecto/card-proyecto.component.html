@@ -18,9 +18,36 @@
   </div>
 
   <div class="card-footer">
-    <span class="fecha">📅 {{ proyecto.fechaVisita | date:'dd MMM' }}</span>
-    <span class="monto">${{ proyecto.costoVisita }}</span>
+    <div class="footer-left">
+      @if (proyecto.estado === 'Cita') {
+        <div class="info-cita">
+          <p>📅 {{ proyecto.fechaVisita | date:'dd/MM/yyyy' }}</p>
+          <p>⏰ {{ proyecto.horaVisita }}</p>
+        </div>
+      }
+
+      @if (proyecto.estado === 'Cotizacion') {
+        <div class="info-cotizacion">
+          <p><strong>Propuesta Creada:</strong></p>
+          <p>{{ fechaDeLaCotizacion | date:'dd/MM/yyyy' }}</p>
+        </div>
+      }
+
+      @if (proyecto.estado === 'En Progreso') {
+        <div class="info-obra">
+          <p>🏗️ {{ proyecto.fechaInicioObra | date:'dd/MM/yyyy' }}</p>
+          <p>⏰ {{ proyecto.horaInicioObra }}</p>
+        </div>
+      }
+    </div>
+
+    <div class="footer-right">
+      <span class="monto-visita">
+        {{ montoMostrar | currency }}
+      </span>
+    </div>
   </div>
+
 
   @if (proyecto.estado === 'Cita') {
     <button class="btn-accion cotizar" (click)="onCotizar()">

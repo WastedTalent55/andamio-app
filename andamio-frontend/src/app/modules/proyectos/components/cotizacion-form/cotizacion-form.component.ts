@@ -60,7 +60,7 @@ export class CotizacionFormComponent implements OnInit {
 }
 
 get tituloModal(): string {
-  return this.cotizacionAEditar ? 'Editar Cotización' : 'Generar Cotización';
+  return this.cotizacionAEditar ? 'Editar Cotizacion' : 'Generar Cotizacion';
 }
 
   // Getter ÚNICO para el FormArray

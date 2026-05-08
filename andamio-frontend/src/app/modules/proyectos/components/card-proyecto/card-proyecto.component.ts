@@ -41,4 +41,30 @@ export class CardProyectoComponent {
     event.stopPropagation(); // Para que no se dispare el click de la tarjeta
     this.verPdf.emit(this.proyecto);
   }
+
+// Dentro de la clase CardProyectoComponent
+// Dentro de la clase CardProyectoComponent en el archivo .ts
+get fechaDeLaCotizacion(): any {
+  // Entramos a: cotizaciones -> primer elemento (0) -> fechaCreacion
+  if (this.proyecto.cotizaciones && this.proyecto.cotizaciones.length > 0) {
+    return this.proyecto.cotizaciones[0].fechaCreacion;
+  }
+  // Si no hay cotización aún, regresamos la fecha de visita para que no se vea vacío
+  return this.proyecto.fechaVisita;
+}
+
+get montoMostrar(): number {
+  // 1. Si está en cita, el monto es el costo de visita
+  if (this.proyecto.estado === 'Cita') {
+    return this.proyecto.costoVisita;
+  }
+
+  // 2. Si está en Cotización o En Obra, buscamos el total en la cotización
+  if (this.proyecto.cotizaciones && this.proyecto.cotizaciones.length > 0) {
+    // Sacamos el totalObra de la primera cotización
+    return this.proyecto.cotizaciones[0].totalObra || 0;
+  }
+
+  return 0;
+}
 }

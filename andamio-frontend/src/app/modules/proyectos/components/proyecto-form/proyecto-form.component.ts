@@ -103,6 +103,7 @@ export class ProyectoFormComponent implements OnInit {
     } else {
       // Si es nuevo, el spread de proyectoAEditar no hace nada, así que generamos ID
       datosProyecto.id = Date.now();
+      datosProyecto.fechaCreacion = new Date();
       this.proyectoService.guardarProyecto(datosProyecto);
     }
 

@@ -36,5 +36,7 @@ export interface Proyecto {
   fechaInicioObra?: string;
   horaInicioObra?: string;
   detallesInstalacion?: string;
+  fechaCreacion?: Date | string; // Para la fecha de la propuesta
+  totalCotizado?: number;
   googleEventId?: string;
 }

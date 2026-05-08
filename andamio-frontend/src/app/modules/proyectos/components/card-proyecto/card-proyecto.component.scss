@@ -81,3 +81,21 @@
     &:hover { background: #e67e22; }
   }
 }
+
+.footer-left {
+    .info-cotizacion {
+      p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #666;
+        
+        strong {
+          color: #333;
+          font-size: 0.75rem;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+      }
+    }
+    // ... el resto del CSS que ya tenías ...
+  }
