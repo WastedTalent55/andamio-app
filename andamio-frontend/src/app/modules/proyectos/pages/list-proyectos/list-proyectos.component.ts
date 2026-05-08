@@ -6,10 +6,11 @@ import { ProyectoFormComponent } from '../../components/proyecto-form/proyecto-f
 import { ClienteService } from '../../../../data/services/cliente.service';
 import { CotizacionFormComponent } from '../../components/cotizacion-form/cotizacion-form.component';
 import { CardProyectoComponent } from '../../components/card-proyecto/card-proyecto.component';
+import { PdfPreviewModalComponent } from '../../components/pdf-preview-modal/pdf-preview-modal.component';
 
 @Component({
   selector: 'app-list-proyectos',
-  imports: [ProyectoFormComponent, CotizacionFormComponent, CardProyectoComponent],
+  imports: [ProyectoFormComponent, CotizacionFormComponent, CardProyectoComponent, PdfPreviewModalComponent],
   templateUrl: './list-proyectos.component.html',
   styleUrl: './list-proyectos.component.scss'
 })
@@ -36,8 +37,10 @@ export class ListProyectosComponent implements OnInit {
     const todos = this.proyectoService.getProyectos();
     // Los separamos para mostrarlos en columnas o secciones
     this.proyectosEvaluacion = todos.filter(p => p.estado === 'Cita');
-    this.proyectosCotizacion = todos.filter(p => p.estado === 'Cotización');
+    this.proyectosCotizacion = todos.filter(p => p.estado === 'Cotizacion');
     this.proyectosEnObra = todos.filter(p => p.estado === 'En Progreso');
+
+    console.log('Estado del Storage:', todos);
   }
 
   agregarProyectoALista(proyecto: Proyecto) {
@@ -73,8 +76,11 @@ export class ListProyectosComponent implements OnInit {
   }
 
   // Variables de control
-mostrarModalCotizacion: boolean = false;
-proyectoParaCotizar?: Proyecto;
+  mostrarModalCotizacion: boolean = false;
+  proyectoParaCotizar?: Proyecto;
+  mostrarModalPdf = false;
+  cotizacionParaVer?: Cotizacion;
+  proyectoParaPdf?: Proyecto;
 
   // Función para el botón "Cotizar" de la tarjeta
   prepararCotizacion(proyecto: Proyecto) {
@@ -87,29 +93,69 @@ proyectoParaCotizar?: Proyecto;
     this.proyectoParaCotizar = undefined;
   }
 
-  // En list-proyectos.component.ts
+  actualizarProyectoConCotizacion(nuevaCotizacion: Cotizacion) {
+    if (this.proyectoParaCotizar) {
+      // 1. Inicializar el array de cotizaciones si no existe
+      if (!this.proyectoParaCotizar.cotizaciones) {
+        this.proyectoParaCotizar.cotizaciones = [];
+      }
 
-actualizarProyectoConCotizacion(nuevaCotizacion: Cotizacion) {
-  if (this.proyectoParaCotizar) {
-    // 1. Inicializar el array de cotizaciones si no existe
-    if (!this.proyectoParaCotizar.cotizaciones) {
-      this.proyectoParaCotizar.cotizaciones = [];
+      // 2. Agregar la nueva cotización
+      this.proyectoParaCotizar.cotizaciones.push(nuevaCotizacion);
+
+      // 3. Cambiar el estado del proyecto para que se mueva a la siguiente columna
+      this.proyectoParaCotizar.estado = 'Cotizacion';
+
+      this.proyectoService.actualizarProyecto(this.proyectoParaCotizar);
+      this.cargarProyectos();
+
+      // 4. (Opcional) Re-asignamos el array para que Angular detecte el cambio 
+      // y el icono aparezca de inmediato en la tarjeta
+      this.proyectosEvaluacion = [...this.proyectosEvaluacion]; 
+
+      // 5. Cerramos el modal
+      this.cerrarModalCotizacion();
+      
+      console.log('Proyecto actualizado con éxito:', this.proyectoParaCotizar);
     }
-
-    // 2. Agregar la nueva cotización
-    this.proyectoParaCotizar.cotizaciones.push(nuevaCotizacion);
-
-    // 3. Cambiar el estado del proyecto para que se mueva a la siguiente columna
-    this.proyectoParaCotizar.estado = 'Cotización';
-
-    // 4. (Opcional) Re-asignamos el array para que Angular detecte el cambio 
-    // y el icono aparezca de inmediato en la tarjeta
-    this.proyectosEvaluacion = [...this.proyectosEvaluacion]; 
-
-    // 5. Cerramos el modal
-    this.cerrarModalCotizacion();
-    
-    console.log('Proyecto actualizado con éxito:', this.proyectoParaCotizar);
   }
-}
+
+  agendarObra(proyecto: Proyecto) {
+    if (confirm(`¿Confirmas que la cotización para "${proyecto.nombre}" fue aprobada?`)) {
+      // 1. Cambiamos el estado
+      proyecto.estado = 'En Progreso';
+      
+      // 2. Actualizamos en el servicio (y por ende en LocalStorage)
+      this.proyectoService.actualizarProyecto(proyecto);
+      
+      // 3. Refrescamos el tablero
+      this.cargarProyectos();
+      
+      console.log('¡Proyecto en obra! 🛠️');
+    }
+  }
+
+  verPdf(proyecto: Proyecto) {
+    if (proyecto.cotizaciones && proyecto.cotizaciones.length > 0) {
+      this.proyectoParaPdf = proyecto;
+      // Por ahora mostramos la última versión
+      this.cotizacionParaVer = proyecto.cotizaciones[proyecto.cotizaciones.length - 1];
+      this.mostrarModalPdf = true;
+    }
+  }  
+
+  abrirEdicionDesdePdf() {
+    // 1. Cerramos el modal del PDF para que no estorbe
+    this.mostrarModalPdf = false;
+
+    // 2. Usamos el proyecto que ya tenemos identificado para el PDF
+    if (this.proyectoParaPdf) {
+      // 3. Abrimos el modal de cotización (el que ya tienes funcionando)
+      this.proyectoParaCotizar = this.proyectoParaPdf;
+      this.mostrarModalCotizacion = true;
+      
+      // NOTA: Para que el formulario de cotización aparezca con los datos "viejos",
+      // necesitaremos pasarle la cotización actual como Input en el siguiente paso.
+    }
+  }
 }

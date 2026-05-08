@@ -18,6 +18,7 @@
       [cliente]="getDatosCliente(p.clienteId)"
       (editar)="editarProyecto($event)"
       (cancelar)="cancelarProyecto($event)"
+      (verPdf)="verPdf($event)"
       (cotizar)="prepararCotizacion($event)">
     </app-card-proyecto>
   }
@@ -28,9 +29,25 @@
       <div class="columna-header">
         <span class="punto cotizacion"></span>
         <h3>Cotizaciones</h3>
+        <span class="contador">{{proyectosCotizacion.length}}</span>
       </div>
-      <div class="lista-cards empty">
-        <p>Esperando aprobación...</p>
+      
+      <div class="lista-cards">
+        @for (p of proyectosCotizacion; track p.id) {
+          <app-card-proyecto 
+            [proyecto]="p" 
+            [cliente]="getDatosCliente(p.clienteId)"
+            (editar)="editarProyecto(p)"
+            (cancelar)="cancelarProyecto(p)"
+            (cotizar)="prepararCotizacion(p)"
+            (verPdf)="verPdf(p)"
+            (agendar)="agendarObra(p)">
+          </app-card-proyecto>
+        } @empty {
+          <div class="empty-state">
+            <p>No hay cotizaciones pendientes</p>
+          </div>
+        }
       </div>
     </section>
 
@@ -38,9 +55,20 @@
       <div class="columna-header">
         <span class="punto obra"></span>
         <h3>En Obra</h3>
+        <span class="contador">{{proyectosEnObra.length}}</span>
       </div>
-      <div class="lista-cards empty">
-        <p>Próximamente...</p>
+      
+      <div class="lista-cards">
+        @for (p of proyectosEnObra; track p.id) {
+          <app-card-proyecto 
+            [proyecto]="p" 
+            [cliente]="getDatosCliente(p.clienteId)"
+            (editar)="editarProyecto(p)"
+            (cancelar)="cancelarProyecto(p)">
+          </app-card-proyecto>
+        } @empty {
+          <p class="empty-text">No hay obras en curso</p>
+        }
       </div>
     </section>
   </div>
@@ -68,4 +96,13 @@
       </app-cotizacion-form>
     </div>
   </div>
+}
+
+@if (mostrarModalPdf && proyectoParaPdf && cotizacionParaVer) {
+  <app-pdf-preview-modal
+    [proyecto]="proyectoParaPdf"
+    [cotizacion]="cotizacionParaVer"
+    (cerrar)="mostrarModalPdf = false"
+    (editar)="abrirEdicionDesdePdf()">
+  </app-pdf-preview-modal>
 }

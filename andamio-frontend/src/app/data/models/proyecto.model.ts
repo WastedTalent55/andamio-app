@@ -26,8 +26,10 @@ export interface Proyecto {
   clienteId: number;
   nombre: string;
   fechaVisita: string;
+  horaVisita?: string;
   direccionVisita: string;
   costoVisita: number;
-  estado: 'Cita' | 'Cotización' | 'En Progreso' | 'Finalizado' | 'Cancelado';
-  cotizaciones?: Cotizacion[]; // <--- Asegúrate de que esta línea esté ahí
+  estado: 'Cita' | 'Cotizacion' | 'En Progreso' | 'Finalizado' | 'Cancelado';
+  cotizaciones?: Cotizacion[]; 
+  googleEventId?: string;
 }
