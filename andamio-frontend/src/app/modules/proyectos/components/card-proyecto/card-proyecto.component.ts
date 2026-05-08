@@ -18,6 +18,7 @@ export class CardProyectoComponent {
   @Output() cotizar = new EventEmitter<Proyecto>();
   @Output() agendar = new EventEmitter<Proyecto>();
   @Output() verPdf = new EventEmitter<Proyecto>();
+  @Output() proyectoClick = new EventEmitter<Proyecto>();
 
   constructor(private pdfService: PdfService) {}
 
@@ -41,6 +42,12 @@ export class CardProyectoComponent {
     event.stopPropagation(); // Para que no se dispare el click de la tarjeta
     this.verPdf.emit(this.proyecto);
   }
+
+  verDetalle() {
+  if (this.proyecto.estado === 'En Progreso') {
+    this.proyectoClick.emit(this.proyecto);
+  }
+}
 
 // Dentro de la clase CardProyectoComponent
 // Dentro de la clase CardProyectoComponent en el archivo .ts

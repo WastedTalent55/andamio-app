@@ -38,5 +38,23 @@ export interface Proyecto {
   detallesInstalacion?: string;
   fechaCreacion?: Date | string; // Para la fecha de la propuesta
   totalCotizado?: number;
+  pagos?: Pago[]; // Historial de abonos
+  presupuestoMateriales?: number;
+  gastosReales?: number;
   googleEventId?: string;
+}
+
+export interface Pago {
+  id: number;
+  monto: number;
+  fecha: Date | string;
+  metodo: 'Efectivo' | 'Transferencia';
+  nota?: string;
+}
+
+export interface Proyecto {
+  // ... (lo que ya tienes)
+  pagos?: Pago[]; // Historial de abonos
+  presupuestoMateriales?: number;
+  gastosReales?: number;
 }
