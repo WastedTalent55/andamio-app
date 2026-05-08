@@ -136,13 +136,15 @@ export class ListProyectosComponent implements OnInit {
   }
 
   verPdf(proyecto: Proyecto) {
-    if (proyecto.cotizaciones && proyecto.cotizaciones.length > 0) {
-      this.proyectoParaPdf = proyecto;
-      // Por ahora mostramos la última versión
-      this.cotizacionParaVer = proyecto.cotizaciones[proyecto.cotizaciones.length - 1];
-      this.mostrarModalPdf = true;
-    }
-  }  
+    const cliente = this.getDatosCliente(proyecto.clienteId);
+    this.proyectoParaPdf = { 
+      ...proyecto, 
+      nombreCliente: cliente?.nombre, 
+      telefonoCliente: cliente?.contacto
+    };
+    this.cotizacionParaVer = proyecto.cotizaciones![proyecto.cotizaciones!.length - 1];
+    this.mostrarModalPdf = true;
+  } 
 
   abrirEdicionDesdePdf() {
     // 1. Cerramos el modal del PDF para que no estorbe

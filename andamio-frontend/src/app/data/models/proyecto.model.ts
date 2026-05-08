@@ -31,5 +31,7 @@ export interface Proyecto {
   costoVisita: number;
   estado: 'Cita' | 'Cotizacion' | 'En Progreso' | 'Finalizado' | 'Cancelado';
   cotizaciones?: Cotizacion[]; 
+  nombreCliente?: string; 
+  telefonoCliente?: string;
   googleEventId?: string;
 }

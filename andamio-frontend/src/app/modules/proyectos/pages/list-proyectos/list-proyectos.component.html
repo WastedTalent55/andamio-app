@@ -64,7 +64,8 @@
             [proyecto]="p" 
             [cliente]="getDatosCliente(p.clienteId)"
             (editar)="editarProyecto(p)"
-            (cancelar)="cancelarProyecto(p)">
+            (cancelar)="cancelarProyecto(p)"
+            (verPdf)="verPdf(p)">
           </app-card-proyecto>
         } @empty {
           <p class="empty-text">No hay obras en curso</p>
