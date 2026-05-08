@@ -1,6 +1,6 @@
 <div class="modal-overlay">
   <div class="modal-contenedor">
-    <form [formGroup]="proyectoForm" (ngSubmit)="guardar()">
+    <form [formGroup]="proyectoForm" (ngSubmit)="enviarFormulario()">
       <div class="campo">
         <label>¿Para qué cliente es?</label>
         <select formControlName="clienteId">
@@ -30,6 +30,11 @@
         <div class="campo">
         <label>Fecha de la Visita</label>
         <input type="date" formControlName="fechaVisita">
+        </div>
+
+        <div class="campo">
+        <label>Hora de la Visita</label>
+        <input type="time" formControlName="horaVisita">
         </div>
 
         <div class="campo">

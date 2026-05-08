@@ -15,10 +15,18 @@ export class ProyectoService {
   }
 
   guardarProyecto(proyecto: Proyecto): void {
-    const proyectos = this.getProyectos();
-    proyectos.push(proyecto);
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(proyectos));
+  const proyectos = this.getProyectos();
+  
+  // ASEGURAR ID: Si no tiene ID, le asignamos uno basado en el tiempo actual
+  if (!proyecto.id) {
+    proyecto.id = Date.now(); 
   }
+
+  proyectos.push(proyecto);
+  localStorage.setItem(this.STORAGE_KEY, JSON.stringify(proyectos));
+  
+  console.log('Proyecto guardado en LocalStorage:', proyecto);
+}
 
   actualizarProyecto(proyectoActualizado: Proyecto): void {
   const proyectos = this.getProyectos();

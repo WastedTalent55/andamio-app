@@ -7,6 +7,7 @@ import { ClienteService } from '../../../../data/services/cliente.service';
 import { CotizacionFormComponent } from '../../components/cotizacion-form/cotizacion-form.component';
 import { CardProyectoComponent } from '../../components/card-proyecto/card-proyecto.component';
 import { PdfPreviewModalComponent } from '../../components/pdf-preview-modal/pdf-preview-modal.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-list-proyectos',
@@ -22,11 +23,25 @@ export class ListProyectosComponent implements OnInit {
   mostrarModal = false;
 
   constructor(private proyectoService: ProyectoService,
-              private clienteService: ClienteService
+              private clienteService: ClienteService,
+              private route: ActivatedRoute,
+              private router: Router
   ) {}
 
   ngOnInit(): void {
     this.cargarProyectos();
+    this.route.queryParams.subscribe(params => {
+    if (params['nuevoProyecto'] && params['clienteId']) {
+      const cId = Number(params['clienteId']);
+      this.abrirModalConCliente(cId);
+
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { nuevoProyecto: null, clienteId: null },
+        queryParamsHandling: 'merge'
+      });
+    }
+  });
   }
 
   getDatosCliente(clienteId: number) {
@@ -44,11 +59,11 @@ export class ListProyectosComponent implements OnInit {
   }
 
   agregarProyectoALista(proyecto: Proyecto) {
-    // Como el servicio ya guardó el proyecto en el LocalStorage dentro del componente hijo,
-    // aquí solo necesitamos recargar la lista y cerrar el modal.
-    this.cargarProyectos();
-    this.mostrarModal = false;
-  }
+  console.log("✅ El hijo confirmó el guardado. Refrescando tablero...");
+  this.cargarProyectos(); // Esto lee el LocalStorage y actualiza las columnas
+  this.mostrarModal = false;
+  this.proyectoSeleccionado = undefined;
+}
   
   abrirModal() {
     this.proyectoSeleccionado = undefined;
@@ -163,5 +178,24 @@ abrirEdicionDesdePdf() {
     
     this.mostrarModalCotizacion = true;
   }
+}
+
+abrirModalConCliente(clienteId: number) {
+  // Aquí sí existen estas variables
+  this.proyectoSeleccionado = {
+    clienteId: clienteId,
+    nombre: '',
+    estado: 'Cita',
+    fechaCreacion: new Date()
+  } as any;
+
+  this.mostrarModal = true;
+
+  // Limpiamos la URL para que no se abra solo al refrescar
+  this.router.navigate([], {
+    relativeTo: this.route,
+    queryParams: { nuevoProyecto: null, clienteId: null },
+    queryParamsHandling: 'merge'
+  });
 }
 }

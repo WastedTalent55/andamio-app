@@ -27,80 +27,76 @@ export class ProyectoFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // 1. Cargar clientes activos para el selector
+    // 1. Cargar clientes
     this.clientesDisponibles = this.clienteService.getClientes().filter(c => c.estaActivo);
 
-    // 2. Inicializar el formulario
+    // 2. Inicializar formulario
     this.proyectoForm = this.fb.group({
       clienteId: ['', Validators.required],
       nombre: ['', Validators.required],
       fechaVisita: ['', Validators.required],
+      horaVisita: ['', Validators.required], // Agregada para que no falle el form
       direccionVisita: ['', Validators.required],
       costoVisita: [0, [Validators.required, Validators.min(0)]]
     });
 
-    // 3. LA MAGIA: Escuchar cuando cambie el cliente seleccionado
+    // 3. Escuchar cambios de cliente para las direcciones
     this.proyectoForm.get('clienteId')?.valueChanges.subscribe(id => {
       this.actualizarDirecciones(id);
     });
 
+    // 4. Si viene de "Clientes" o "Edición"
     if (this.proyectoAEditar) {
-      this.proyectoForm.patchValue({
-        clienteId: this.proyectoAEditar.clienteId,
-        nombre: this.proyectoAEditar.nombre,
-        fechaVisita: this.proyectoAEditar.fechaVisita,
-        direccionVisita: this.proyectoAEditar.direccionVisita,
-        costoVisita: this.proyectoAEditar.costoVisita
-      });
+      const idCliente = this.proyectoAEditar.clienteId.toString();
       
-      // Forzamos la actualización de direcciones basada en el cliente cargado
-      this.actualizarDirecciones(this.proyectoAEditar.clienteId.toString());
+      this.proyectoForm.patchValue({
+        clienteId: idCliente,
+        nombre: this.proyectoAEditar.nombre || '',
+        fechaVisita: this.proyectoAEditar.fechaVisita || '',
+        direccionVisita: this.proyectoAEditar.direccionVisita || '',
+        costoVisita: this.proyectoAEditar.costoVisita || 0
+      });
+
+      this.actualizarDirecciones(idCliente);
     }
   }
-  
 
   actualizarDirecciones(clienteId: string) {
     const cliente = this.clientesDisponibles.find(c => c.id === Number(clienteId));
     if (cliente) {
       this.direccionesSugeridas = cliente.ubicaciones;
-      // Opcional: Si solo tiene una dirección, ponerla por defecto
       if (this.direccionesSugeridas.length === 1) {
         this.proyectoForm.patchValue({ direccionVisita: this.direccionesSugeridas[0] });
       }
     }
   }
 
-  guardar() {
-    if (this.proyectoForm.valid) {
-      
-      if (this.proyectoAEditar) {
-        // --- MODO EDICIÓN ---
-        const proyectoActualizado = {
-          ...this.proyectoAEditar, // Mantenemos el ID original y el estado actual
-          ...this.proyectoForm.value // Sobrescribimos con lo que hay en el formulario
-        };
-        
-        this.proyectoService.actualizarProyecto(proyectoActualizado); // Usamos actualizar
-        this.proyectoGuardado.emit(proyectoActualizado);
-        
-      } else {
-        // --- MODO CREACIÓN ---
-        const nuevoProyecto = {
-          ...this.proyectoForm.value,
-          id: Date.now(), // Generamos ID solo si es nuevo
-          estado: 'Cita'
-        };
-        
-        this.proyectoService.guardarProyecto(nuevoProyecto);
-        this.proyectoGuardado.emit(nuevoProyecto);
-      }
-      
-      this.proyectoForm.reset();
-      this.cerrar.emit(); 
-      
-    } else {
-      alert('¡Cuidado! Te faltan campos por llenar.');
+  // --- ÚNICA FUNCIÓN DE GUARDADO ---
+  enviarFormulario() {
+    console.log("🚀 Iniciando proceso de guardado...");
+
+    if (this.proyectoForm.invalid) {
+      alert('Por favor, llena todos los campos obligatorios.');
+      return;
     }
+
+    const datosProyecto: Proyecto = {
+      ...this.proyectoForm.value,
+      // Si el proyectoAEditar ya tiene ID, lo conservamos. Si no, generamos uno.
+      id: this.proyectoAEditar?.id ? this.proyectoAEditar.id : Date.now(),
+      estado: this.proyectoAEditar?.id ? this.proyectoAEditar.estado : 'Cita',
+    };
+
+    console.log("💾 Objeto a guardar:", datosProyecto);
+
+    if (this.proyectoAEditar?.id) {
+      this.proyectoService.actualizarProyecto(datosProyecto);
+    } else {
+      this.proyectoService.guardarProyecto(datosProyecto);
+    }
+
+    this.proyectoGuardado.emit(datosProyecto);
+    this.cerrar.emit();
   }
 
   cancelar() {

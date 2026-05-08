@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ClienteService } from '../../../../data/services/cliente.service';
 import { Cliente } from '../../../../data/models/cliente.model';
 import { ClienteFormComponent } from '../../components/cliente-form/cliente-form.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list-clientes',
@@ -9,11 +10,13 @@ import { ClienteFormComponent } from '../../components/cliente-form/cliente-form
   templateUrl: './list-clientes.component.html',
   styleUrl: './list-clientes.component.scss'
 })
+
 export class ListClientesComponent implements OnInit {
   misClientes: Cliente[] = [];
   mostrarModal = false;
 
-  constructor(private clienteService: ClienteService) {}
+  constructor(private router: Router,
+              private clienteService: ClienteService) {}
 
   ngOnInit(): void {
     this.cargarClientes();
@@ -59,4 +62,10 @@ export class ListClientesComponent implements OnInit {
     this.clienteSeleccionado = undefined; // Nos aseguramos de que no haya nadie seleccionado
     this.mostrarModal = true;
   }
+
+  crearProyectoParaCliente(clienteId: number) {
+  this.router.navigate(['/proyectos'], { 
+    queryParams: { nuevoProyecto: true, clienteId: clienteId } 
+  });
+}
 }
