@@ -13,6 +13,7 @@ import { PdfService } from '../../../../data/services/pdf.service';
 })
 export class CotizacionFormComponent implements OnInit {
   @Input() proyecto!: Proyecto; 
+  @Input() cotizacionAEditar?: Cotizacion; 
   @Output() cerrar = new EventEmitter<void>();
   @Output() cotizacionGuardada = new EventEmitter<Cotizacion>(); 
   cotizacionForm!: FormGroup;
@@ -28,19 +29,39 @@ export class CotizacionFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.cotizacionForm = this.fb.group({
-      items: this.fb.array([]), 
-      descuento: [0, [Validators.min(0)]]
-    });
+  this.cotizacionForm = this.fb.group({
+    items: this.fb.array([]), 
+    descuento: [0, [Validators.min(0)]]
+  });
 
-    // Escuchamos cambios para calcular totales en tiempo real
-    this.cotizacionForm.valueChanges.subscribe(() => {
-      this.calcularTotales();
-    });
+  // Escuchamos cambios para calcular totales
+  this.cotizacionForm.valueChanges.subscribe(() => {
+    this.calcularTotales();
+  });
 
-    // Empezamos con una fila vacía
+  // LÓGICA DE CARGA:
+  if (this.cotizacionAEditar) {
+    // Si estamos editando, llenamos el FormArray con los items existentes
+    this.cotizacionAEditar.items.forEach(item => {
+      this.items.push(this.fb.group({
+        tipo: [item.tipo, Validators.required],
+        descripcion: [item.descripcion, Validators.required],
+        unidad: [item.unidad, Validators.required],
+        cantidad: [item.cantidad, [Validators.required, Validators.min(0.1)]],
+        precioUnitario: [item.precioUnitario, [Validators.required, Validators.min(0)]]
+      }));
+    });
+  } else {
+    // Si es nueva, empezamos con una fila vacía normal
     this.agregarItem();
   }
+
+  this.calcularTotales(); // Forzamos el primer cálculo
+}
+
+get tituloModal(): string {
+  return this.cotizacionAEditar ? 'Editar Cotización' : 'Generar Cotización';
+}
 
   // Getter ÚNICO para el FormArray
   get items() {

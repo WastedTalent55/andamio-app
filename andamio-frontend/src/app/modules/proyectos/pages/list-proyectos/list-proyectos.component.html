@@ -92,7 +92,7 @@
     <div class="modal-contenedor">
       <app-cotizacion-form 
         [proyecto]="proyectoParaCotizar"
-        (cerrar)="cerrarModalCotizacion()"
+        [cotizacionAEditar]="cotizacionParaEditar" (cerrar)="cerrarModalCotizacion()"
         (cotizacionGuardada)="actualizarProyectoConCotizacion($event)">
       </app-cotizacion-form>
     </div>

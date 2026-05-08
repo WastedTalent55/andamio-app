@@ -1,5 +1,7 @@
 <div class="cotizacion-container">
-  <h2>Generar Cotización - {{ proyecto.nombre }}</h2>
+  <div class="modal-header">
+  <h2>{{ tituloModal }}</h2> <button (click)="cerrar.emit()">X</button>
+</div>
 
   <form [formGroup]="cotizacionForm">
     <div class="tabla-scroll">
