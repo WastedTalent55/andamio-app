@@ -1,56 +1,85 @@
 <div class="modal-overlay">
   <div class="modal-contenedor">
     <form [formGroup]="proyectoForm" (ngSubmit)="enviarFormulario()">
-      <div class="campo">
-        <label>¿Para qué cliente es?</label>
-        <select formControlName="clienteId">
-          <option value="">Selecciona un cliente...</option>
-          @for (c of clientesDisponibles; track c.id) {
-            <option [value]="c.id">{{ c.nombre }}</option>
-          }
-        </select>
+      <div class="modal-header">
+        <h2>{{ esAgendarObra ? '🏗️ Agendar Inicio de Obra' : '📋 Datos de la Evaluación' }}</h2>
+        <p>{{ esAgendarObra ? 'Confirma los detalles para comenzar el trabajo.' : 'Registra una nueva visita técnica.' }}</p>
       </div>
 
-      <div class="campo">
-        <label>Dirección de la Visita</label>
-        <select formControlName="direccionVisita">
-          <option value="">Selecciona una ubicación...</option>
-          @for (dir of direccionesSugeridas; track dir) {
-            <option [value]="dir">{{ dir }}</option>
-          }
-          <option value="nueva">-- Otra dirección --</option>
-        </select>
-      </div>
+  
+      @if (!esAgendarObra) {
+        <div class="grid-form">
+          <div class="campo completo">
+            <label>Nombre del Proyecto</label>
+            <input type="text" formControlName="nombre" placeholder="Ej. Instalación de repisas en Sala">
+          </div>
 
-      <div class="campo">
-        <label>Nombre del Trabajo / Proyecto</label>
-        <input type="text" formControlName="nombre" placeholder="Ej: Reparación baño Alex">
+          <div class="campo">
+            <label>Cliente</label>
+            <select formControlName="clienteId">
+              <option value="">Seleccionar cliente...</option>
+              @for (c of clientesDisponibles; track c.id) {
+                <option [value]="c.id">{{ c.nombre }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="campo">
+            <label>Costo de Visita</label>
+            <input type="number" formControlName="costoVisita">
+          </div>
+
+          <div class="campo">
+            <label>Fecha de Evaluación</label>
+            <input type="date" formControlName="fechaVisita">
+          </div>
+
+          <div class="campo">
+            <label>Hora</label>
+            <input type="time" formControlName="horaVisita">
+          </div>
+
+          <div class="campo completo">
+            <label>Dirección de Visita</label>
+            <input type="text" formControlName="direccionVisita" list="direcciones">
+            <datalist id="direcciones">
+              @for (dir of direccionesSugeridas; track dir) {
+                <option [value]="dir"></option>
+              }
+            </datalist>
+          </div>
         </div>
+      }
 
-        <div class="campo">
-        <label>Fecha de la Visita</label>
-        <input type="date" formControlName="fechaVisita">
+      @if (esAgendarObra) {
+        <div class="sección-obra">
+          <div class="info-proyecto-mini">
+            <p><strong>Proyecto:</strong> {{ proyectoAEditar?.nombre }}</p>
+          </div>
+
+          <div class="grid-form">
+            <div class="campo">
+              <label>Fecha de Inicio</label>
+              <input type="date" formControlName="fechaInicioObra">
+            </div>
+
+            <div class="campo">
+              <label>Hora de Llegada</label>
+              <input type="time" formControlName="horaInicioObra">
+            </div>
+
+            <div class="campo completo">
+              <label>Instrucciones o Detalles Especiales</label>
+              <textarea formControlName="detallesInstalacion" rows="4" placeholder="Ej. Llevar taladro de percusión y taquetes de 1/4..."></textarea>
+            </div>
+          </div>
         </div>
+      }
 
-        <div class="campo">
-        <label>Hora de la Visita</label>
-        <input type="time" formControlName="horaVisita">
-        </div>
-
-        <div class="campo">
-        <label>Costo de Evaluación ($)</label>
-        <input type="number" formControlName="costoVisita">
-      </div>
       <div class="modal-acciones">
-        <button type="button" class="btn-cancelar" (click)="cancelar()">
-          Cancelar
-        </button>
-        
-        <button 
-          type="submit" 
-          class="btn-guardar" 
-          [disabled]="proyectoForm.invalid">
-          Agendar Evaluación
+        <button type="button" class="btn-secundario" (click)="cancelar()">Cancelar</button>
+        <button type="submit" class="btn-primario" [disabled]="proyectoForm.invalid">
+          {{ esAgendarObra ? 'Confirmar y Empezar' : 'Guardar Proyecto' }}
         </button>
       </div>
     </form>

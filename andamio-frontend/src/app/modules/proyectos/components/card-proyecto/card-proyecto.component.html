@@ -23,6 +23,12 @@
   </div>
 
   @if (proyecto.estado === 'Cita') {
-    <button class="btn-accion" (click)="cotizar.emit(proyecto)">Cotizar</button>
+    <button class="btn-accion cotizar" (click)="onCotizar()">
+      Generar Cotización
+    </button>
+  } @else if (proyecto.estado === 'Cotizacion') {
+    <button class="btn-accion agendar" (click)="onAgendar()">
+      Aprobar y Agendar Obra
+    </button>
   }
 </article>

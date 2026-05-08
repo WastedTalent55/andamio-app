@@ -33,5 +33,8 @@ export interface Proyecto {
   cotizaciones?: Cotizacion[]; 
   nombreCliente?: string; 
   telefonoCliente?: string;
+  fechaInicioObra?: string;
+  horaInicioObra?: string;
+  detallesInstalacion?: string;
   googleEventId?: string;
 }

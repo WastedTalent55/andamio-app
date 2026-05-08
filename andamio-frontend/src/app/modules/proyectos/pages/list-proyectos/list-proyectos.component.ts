@@ -138,18 +138,8 @@ export class ListProyectosComponent implements OnInit {
 }
 
   agendarObra(proyecto: Proyecto) {
-    if (confirm(`¿Confirmas que la cotización para "${proyecto.nombre}" fue aprobada?`)) {
-      // 1. Cambiamos el estado
-      proyecto.estado = 'En Progreso';
-      
-      // 2. Actualizamos en el servicio (y por ende en LocalStorage)
-      this.proyectoService.actualizarProyecto(proyecto);
-      
-      // 3. Refrescamos el tablero
-      this.cargarProyectos();
-      
-      console.log('¡Proyecto en obra! 🛠️');
-    }
+    this.proyectoSeleccionado = { ...proyecto }; 
+  this.mostrarModal = true;
   }
 
   verPdf(proyecto: Proyecto) {

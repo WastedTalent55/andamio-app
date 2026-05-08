@@ -64,8 +64,8 @@ export class ListClientesComponent implements OnInit {
   }
 
   crearProyectoParaCliente(clienteId: number) {
-  this.router.navigate(['/proyectos'], { 
-    queryParams: { nuevoProyecto: true, clienteId: clienteId } 
-  });
-}
+    this.router.navigate(['/proyectos'], { 
+      queryParams: { nuevoProyecto: true, clienteId: clienteId } 
+    });
+  }
 }

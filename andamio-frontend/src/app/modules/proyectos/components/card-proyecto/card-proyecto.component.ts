@@ -16,9 +16,18 @@ export class CardProyectoComponent {
   @Output() editar = new EventEmitter<Proyecto>();
   @Output() cancelar = new EventEmitter<Proyecto>();
   @Output() cotizar = new EventEmitter<Proyecto>();
+  @Output() agendar = new EventEmitter<Proyecto>();
   @Output() verPdf = new EventEmitter<Proyecto>();
 
   constructor(private pdfService: PdfService) {}
+
+  onAgendar() {
+    this.agendar.emit(this.proyecto);
+  }
+
+  onCotizar() {
+    this.cotizar.emit(this.proyecto);
+  }
 
   descargarPDF(event: Event) {
     event.stopPropagation(); // Evita que se abra el detalle

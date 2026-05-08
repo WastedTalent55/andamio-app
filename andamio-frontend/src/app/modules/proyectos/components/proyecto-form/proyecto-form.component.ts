@@ -19,6 +19,7 @@ export class ProyectoFormComponent implements OnInit {
   proyectoForm!: FormGroup;
   clientesDisponibles: Cliente[] = [];
   direccionesSugeridas: string[] = [];
+  esAgendarObra: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -30,35 +31,46 @@ export class ProyectoFormComponent implements OnInit {
     // 1. Cargar clientes
     this.clientesDisponibles = this.clienteService.getClientes().filter(c => c.estaActivo);
 
-    // 2. Inicializar formulario
+    // 2. Inicializar formulario con valores por defecto para que NUNCA sea null
     this.proyectoForm = this.fb.group({
       clienteId: ['', Validators.required],
       nombre: ['', Validators.required],
       fechaVisita: ['', Validators.required],
-      horaVisita: ['', Validators.required], // Agregada para que no falle el form
+      horaVisita: ['', Validators.required],
       direccionVisita: ['', Validators.required],
       costoVisita: [0, [Validators.required, Validators.min(0)]]
     });
 
-    // 3. Escuchar cambios de cliente para las direcciones
-    this.proyectoForm.get('clienteId')?.valueChanges.subscribe(id => {
-      this.actualizarDirecciones(id);
-    });
-
-    // 4. Si viene de "Clientes" o "Edición"
+    // 3. Lógica específica según el caso
     if (this.proyectoAEditar) {
-      const idCliente = this.proyectoAEditar.clienteId.toString();
-      
-      this.proyectoForm.patchValue({
-        clienteId: idCliente,
-        nombre: this.proyectoAEditar.nombre || '',
-        fechaVisita: this.proyectoAEditar.fechaVisita || '',
-        direccionVisita: this.proyectoAEditar.direccionVisita || '',
-        costoVisita: this.proyectoAEditar.costoVisita || 0
-      });
+      // CASO A: Es Agendar Obra (Viene de Cotización)
+      if (this.proyectoAEditar.estado === 'Cotizacion') {
+        this.esAgendarObra = true;
 
-      this.actualizarDirecciones(idCliente);
+        this.proyectoForm.addControl('fechaInicioObra', this.fb.control('', Validators.required));
+        this.proyectoForm.addControl('horaInicioObra', this.fb.control('', Validators.required));
+        this.proyectoForm.addControl('detallesInstalacion', this.fb.control(''));
+
+        // Quitamos obligatoriedad de evaluación para que no bloquee el botón
+        const camposEvaluacion = ['fechaVisita', 'horaVisita', 'direccionVisita', 'clienteId'];
+        camposEvaluacion.forEach(campo => {
+          this.proyectoForm.get(campo)?.clearValidators();
+          this.proyectoForm.get(campo)?.updateValueAndValidity();
+        });
+      }
+
+      // CARGAR DATOS (Para Edición o para Agendar Obra)
+      this.proyectoForm.patchValue({
+        ...this.proyectoAEditar,
+        clienteId: this.proyectoAEditar.clienteId.toString()
+      });
+      this.actualizarDirecciones(this.proyectoAEditar.clienteId.toString());
     }
+
+    // 4. Escuchar cambios de cliente
+    this.proyectoForm.get('clienteId')?.valueChanges.subscribe(id => {
+      if (id) this.actualizarDirecciones(id);
+    });
   }
 
   actualizarDirecciones(clienteId: string) {
@@ -73,25 +85,24 @@ export class ProyectoFormComponent implements OnInit {
 
   // --- ÚNICA FUNCIÓN DE GUARDADO ---
   enviarFormulario() {
-    console.log("🚀 Iniciando proceso de guardado...");
-
     if (this.proyectoForm.invalid) {
       alert('Por favor, llena todos los campos obligatorios.');
       return;
     }
 
-    const datosProyecto: Proyecto = {
-      ...this.proyectoForm.value,
-      // Si el proyectoAEditar ya tiene ID, lo conservamos. Si no, generamos uno.
-      id: this.proyectoAEditar?.id ? this.proyectoAEditar.id : Date.now(),
-      estado: this.proyectoAEditar?.id ? this.proyectoAEditar.estado : 'Cita',
-    };
+    const estadoFinal = this.esAgendarObra ? 'En Progreso' : (this.proyectoAEditar?.estado || 'Cita');
 
-    console.log("💾 Objeto a guardar:", datosProyecto);
+    const datosProyecto: Proyecto = {
+      ...this.proyectoAEditar,    // Mantiene IDs, PDFs y fechas de creación
+      ...this.proyectoForm.value, // Sobrescribe con lo que hay en el formulario
+      estado: estadoFinal         // Asegura la columna correcta
+    };
 
     if (this.proyectoAEditar?.id) {
       this.proyectoService.actualizarProyecto(datosProyecto);
     } else {
+      // Si es nuevo, el spread de proyectoAEditar no hace nada, así que generamos ID
+      datosProyecto.id = Date.now();
       this.proyectoService.guardarProyecto(datosProyecto);
     }
 
