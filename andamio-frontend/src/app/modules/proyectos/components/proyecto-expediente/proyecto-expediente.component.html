@@ -8,6 +8,9 @@
   <div class="grid-expediente">
     <section class="card-financiera">
       <h3>Resumen Financiero</h3>
+      <button class="btn-pago-rapido" (click)="abrirModalPago()">
+      <span>+</span> Cobrar
+    </button>
       <div class="stats-grid">
         <div class="stat-item">
           <label>Presupuesto Total</label>
@@ -46,7 +49,7 @@
   <section class="historial-pagos">
     <div class="header-section">
       <h3>Historial de Pagos</h3>
-      <!-- <button class="btn-pagar" (click)="abrirModalPago()">+ Registrar Abono</button> -->
+      <button class="btn-pagar" (click)="abrirModalPago()">+ Registrar Abono</button>
     </div>
     <table>
       <thead>
@@ -70,4 +73,34 @@
       </tbody>
     </table>
   </section>
+</div>
+
+<div class="modal-overlay" *ngIf="mostrarFormPago">
+  <div class="modal-content pago-form">
+    <h3>Registrar Nuevo Abono</h3>
+    <form (submit)="guardarPago(monto.value, metodo.value, nota.value); $event.preventDefault()">
+      <div class="form-group">
+        <label>Monto del Pago</label>
+        <input #monto type="number" placeholder="0.00" required>
+      </div>
+      
+      <div class="form-group">
+        <label>Método de Pago</label>
+        <select #metodo>
+          <option value="Transferencia">Transferencia</option>
+          <option value="Efectivo">Efectivo</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Nota / Concepto</label>
+        <input #nota type="text" placeholder="Ej: Anticipo de materiales">
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" (click)="mostrarFormPago = false">Cancelar</button>
+        <button type="submit" class="btn-confirmar">Confirmar Pago</button>
+      </div>
+    </form>
+  </div>
 </div>

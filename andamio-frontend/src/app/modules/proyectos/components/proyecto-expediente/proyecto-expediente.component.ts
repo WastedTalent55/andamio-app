@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ProyectoService } from '../../../../data/services/proyecto.service';
 import { Proyecto, Pago } from '../../../../data/models/proyecto.model'; 
 
 @Component({
@@ -13,23 +14,24 @@ export class ProyectoExpedienteComponent implements OnInit {
   @Input() proyecto!: Proyecto;
   @Output() cerrar = new EventEmitter<void>();
 
+  mostrarFormPago = false;
   diasTranscurridos: number = 0;
   progresoTiempo: number = 0;
+
+  constructor(private proyectoService: ProyectoService) {} 
 
   ngOnInit(): void {
     this.calcularTiempos();
   }
 
+  // --- LÓGICA DE TIEMPOS ---
   calcularTiempos() {
     if (this.proyecto && this.proyecto.fechaInicioObra) {
       const inicio = new Date(this.proyecto.fechaInicioObra);
       const hoy = new Date();
-      
-      // Diferencia en días
       const diffTime = Math.abs(hoy.getTime() - inicio.getTime());
       this.diasTranscurridos = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       
-      // Calcular porcentaje si hay días estimados
       if (this.proyecto.diasEstimados) {
         this.progresoTiempo = (this.diasTranscurridos / this.proyecto.diasEstimados) * 100;
       }
@@ -43,33 +45,51 @@ export class ProyectoExpedienteComponent implements OnInit {
     return 'bueno';
   }
 
-  // Añade esto dentro de la clase ProyectoExpedienteComponent
-
-  // 1. Total presupuestado (de la última cotización)
+  // --- GETTERS FINANCIEROS (REACTIVOS) ---
   get totalPresupuestado(): number {
     if (!this.proyecto.cotizaciones || this.proyecto.cotizaciones.length === 0) return 0;
     return this.proyecto.cotizaciones[this.proyecto.cotizaciones.length - 1].totalNeto;
   }
 
-  // 2. Total pagado por el cliente
   get totalPagado(): number {
     return (this.proyecto.pagos || []).reduce((acc, pago) => acc + pago.monto, 0);
   }
 
-  // 3. Saldo pendiente
   get saldoPendiente(): number {
     return this.totalPresupuestado - this.totalPagado;
   }
 
-  // 4. Porcentaje de cobro
   get porcentajeCobrado(): number {
     if (this.totalPresupuestado === 0) return 0;
     return (this.totalPagado / this.totalPresupuestado) * 100;
   }
 
-  // 5. Utilidad estimada (Ingresos - Gastos reales)
-  get utilidadEstimada(): number {
-    const gastos = this.proyecto.gastosReales || 0;
-    return this.totalPresupuestado - gastos;
+  // --- GESTIÓN DE PAGOS ---
+  abrirModalPago() {
+    this.mostrarFormPago = true;
+  }
+
+  guardarPago(monto: string, metodo: any, nota: string) {
+    if (!monto || Number(monto) <= 0) return;
+
+    const nuevoPago: Pago = {
+      id: Date.now(),
+      monto: Number(monto),
+      fecha: new Date(),
+      metodo: metodo,
+      nota: nota
+    };
+
+    if (!this.proyecto.pagos) {
+      this.proyecto.pagos = [];
+    }
+
+    this.proyecto.pagos.push(nuevoPago);
+    
+    // Guardamos en LocalStorage
+    this.proyectoService.actualizarProyecto(this.proyecto);
+
+    // Cerramos modal y la vista se actualizará sola gracias a los getters
+    this.mostrarFormPago = false;
   }
 }
