@@ -7,7 +7,7 @@ export const routes: Routes = [
   },
   { 
     path: 'proyectos', 
-    loadChildren: () => import('./modules/proyectos/proyectos.module').then(m => m.ProyectosModule) 
+    loadComponent: () => import('./modules/proyectos/pages/list-proyectos/list-proyectos.component').then(m => m.ListProyectosComponent) 
   },
   {
     path: '',

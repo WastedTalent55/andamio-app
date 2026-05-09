@@ -6,6 +6,7 @@ import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-pdf-preview-modal',
+  standalone: true,
   templateUrl: './pdf-preview-modal.component.html',
   styleUrls: ['./pdf-preview-modal.component.scss']
 })

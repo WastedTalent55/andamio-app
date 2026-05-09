@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-list-proyectos',
+  standalone: true,
   imports: [ProyectoFormComponent, CotizacionFormComponent, CardProyectoComponent, PdfPreviewModalComponent],
   templateUrl: './list-proyectos.component.html',
   styleUrl: './list-proyectos.component.scss'

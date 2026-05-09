@@ -4,6 +4,7 @@ import { Cliente } from '../../../../data/models/cliente.model';
 
 @Component({
   selector: 'app-cliente-form',
+  standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './cliente-form.component.html',
   styleUrl: './cliente-form.component.scss'

@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list-clientes',
+  standalone: true,
   imports: [ClienteFormComponent],
   templateUrl: './list-clientes.component.html',
   styleUrl: './list-clientes.component.scss'

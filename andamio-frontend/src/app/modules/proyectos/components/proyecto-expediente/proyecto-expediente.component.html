@@ -1,0 +1,33 @@
+<div class="expediente-container">
+  <header>
+    <h2>📂 Expediente: {{ proyecto.nombre }}</h2>
+    <button class="btn-cerrar" (click)="cerrar.emit()">✕</button>
+  </header>
+
+  <div class="dashboard-grid">
+    <div class="widget" [ngClass]="estadoRendimiento">
+      <h3>⏱️ Control de Tiempo</h3>
+      <div class="stat">
+        <span class="label">Días transcurridos:</span>
+        <span class="value">{{ diasTranscurridos }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">Prometido al cliente:</span>
+        <span class="value">{{ proyecto.diasEstimados || 'No definido' }} días</span>
+      </div>
+      
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progresoTiempo > 100 ? 100 : progresoTiempo"></div>
+      </div>
+      
+      @if (estadoRendimiento === 'retrasado') {
+        <p class="alerta">⚠️ Estás perdiendo rentabilidad por retraso.</p>
+      }
+    </div>
+
+    <div class="widget">
+      <h3>💰 Finanzas</h3>
+      <p>Aquí conectaremos los pagos que mencionaste...</p>
+    </div>
+  </div>
+</div>
