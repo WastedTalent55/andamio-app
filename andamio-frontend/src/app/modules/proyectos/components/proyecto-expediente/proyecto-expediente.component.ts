@@ -21,7 +21,7 @@ export class ProyectoExpedienteComponent implements OnInit {
   }
 
   calcularTiempos() {
-    if (this.proyecto.fechaInicioObra) {
+    if (this.proyecto && this.proyecto.fechaInicioObra) {
       const inicio = new Date(this.proyecto.fechaInicioObra);
       const hoy = new Date();
       
@@ -30,15 +30,15 @@ export class ProyectoExpedienteComponent implements OnInit {
       this.diasTranscurridos = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       
       // Calcular porcentaje si hay días estimados
-      //if (this.proyecto.diasEstimados) {
-        //this.progresoTiempo = (this.diasTranscurridos / this.proyecto.diasEstimados) * 100;
-      //}
+      if (this.proyecto.diasEstimados) {
+        this.progresoTiempo = (this.diasTranscurridos / this.proyecto.diasEstimados) * 100;
+      }
     }
   }
 
   get estadoRendimiento() {
-    //if (!this.proyecto.diasEstimados) return 'normal';
-    //if (this.diasTranscurridos > this.proyecto.diasEstimados) return 'retrasado';
+    if (!this.proyecto.diasEstimados) return 'normal';
+    if (this.diasTranscurridos > this.proyecto.diasEstimados) return 'retrasado';
     if (this.progresoTiempo > 80) return 'critico';
     return 'bueno';
   }

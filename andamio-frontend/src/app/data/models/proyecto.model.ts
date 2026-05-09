@@ -29,12 +29,13 @@ export interface Proyecto {
   horaVisita?: string;
   direccionVisita: string;
   costoVisita: number;
-  estado: 'Cita' | 'Cotizacion' | 'En Progreso' | 'Finalizado' | 'Cancelado';
+  estado: 'Cita' | 'Cotizacion' | 'En Progreso' | 'Finalizado' | 'Cancelado' | 'Retrasado';
   cotizaciones?: Cotizacion[]; 
   nombreCliente?: string; 
   telefonoCliente?: string;
-  fechaInicioObra?: string;
+  fechaInicioObra?: Date | string;
   horaInicioObra?: string;
+  diasEstimados?: number;
   detallesInstalacion?: string;
   fechaCreacion?: Date | string; // Para la fecha de la propuesta
   totalCotizado?: number;

@@ -7,8 +7,8 @@
         📄 <small>V{{ proyecto.cotizaciones.length }}</small>
       </button>
     }
-    <button class="btn-icon" (click)="editar.emit(proyecto)" title="Editar">✏️</button>
-    <button class="btn-icon btn-cancelar" (click)="cancelar.emit(proyecto)" title="Cancelar">🚫</button>
+    <button class="btn-icon" (click)="editar.emit(proyecto); $event.stopPropagation()" title="Editar">✏️</button>
+    <button class="btn-icon btn-cancelar" (click)="cancelar.emit(proyecto); $event.stopPropagation()" title="Cancelar">🚫</button>
   </div>
 
   <div class="card-tag">{{ proyecto.estado }}</div>

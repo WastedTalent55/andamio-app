@@ -2,108 +2,95 @@
   <h1>Tablero de Proyectos</h1>
   <button class="btn-nuevo" (click)="abrirModal()">+ Nueva Evaluación</button>
 </header>
-<div class="contenedor-proyectos">
-  <div class="tablero-kanban">
-    <section class="columna">
-      <div class="columna-header">
-        <span class="punto evaluacion"></span>
-        <h3>Evaluaciones</h3>
-        <span class="contador">{{proyectosEvaluacion.length}}</span>
-      </div>
-      
-      <div class="lista-cards">
-  @for (p of proyectosEvaluacion; track p.id) {
-    <app-card-proyecto 
-      [proyecto]="p" 
-      [cliente]="getDatosCliente(p.clienteId)"
-      (editar)="editarProyecto($event)"
-      (cancelar)="cancelarProyecto($event)"
-      (verPdf)="verPdf($event)"
-      (cotizar)="prepararCotizacion($event)">
-    </app-card-proyecto>
-  }
-</div>
-    </section>
 
-    <section class="columna">
-      <div class="columna-header">
-        <span class="punto cotizacion"></span>
-        <h3>Cotizaciones</h3>
-        <span class="contador">{{proyectosCotizacion.length}}</span>
-      </div>
+@if (!proyectoSeleccionado) {
+  <div class="contenedor-proyectos">
+    <div class="tablero-kanban">
       
-      <div class="lista-cards">
-        @for (p of proyectosCotizacion; track p.id) {
-          <app-card-proyecto 
-            [proyecto]="p" 
-            [cliente]="getDatosCliente(p.clienteId)"
-            (editar)="editarProyecto(p)"
-            (cancelar)="cancelarProyecto(p)"
-            (cotizar)="prepararCotizacion(p)"
-            (verPdf)="verPdf(p)"
-            (agendar)="agendarObra(p)">
-          </app-card-proyecto>
-        } @empty {
-          <div class="empty-state">
-            <p>No hay cotizaciones pendientes</p>
-          </div>
-        }
-      </div>
-    </section>
+      <section class="columna">
+        <div class="columna-header">
+          <span class="punto evaluacion"></span>
+          <h3>Evaluaciones</h3>
+          <span class="contador">{{proyectosEvaluacion.length}}</span>
+        </div>
+        <div class="lista-cards">
+          @for (p of proyectosEvaluacion; track p.id) {
+            <app-card-proyecto 
+              [proyecto]="p" 
+              [cliente]="getDatosCliente(p.clienteId)"
+              (editar)="editarProyecto(p)"
+              (cancelar)="cancelarProyecto(p)"
+              (verPdf)="verPdf(p)"
+              (cotizar)="prepararCotizacion(p)">
+            </app-card-proyecto>
+          }
+        </div>
+      </section>
 
-    <section class="columna">
-      <div class="columna-header">
-        <span class="punto obra"></span>
-        <h3>En Obra</h3>
-        <span class="contador">{{proyectosEnObra.length}}</span>
-      </div>
-      
-      <div class="lista-cards">
-        @for (p of proyectosEnObra; track p.id) {
-          <app-card-proyecto 
-            [proyecto]="p" 
-            [cliente]="getDatosCliente(p.clienteId)"
-            (editar)="editarProyecto(p)"
-            (cancelar)="cancelarProyecto(p)"
-            (verPdf)="verPdf(p)">
-          </app-card-proyecto>
-        } @empty {
-          <p class="empty-text">No hay obras en curso</p>
-        }
-      </div>
-    </section>
+      <section class="columna">
+        <div class="columna-header">
+          <span class="punto cotizacion"></span>
+          <h3>Cotizaciones</h3>
+          <span class="contador">{{proyectosCotizacion.length}}</span>
+        </div>
+        <div class="lista-cards">
+          @for (p of proyectosCotizacion; track p.id) {
+            <app-card-proyecto 
+              [proyecto]="p" 
+              [cliente]="getDatosCliente(p.clienteId)"
+              (editar)="editarProyecto(p)"
+              (cancelar)="cancelarProyecto(p)"
+              (cotizar)="prepararCotizacion(p)"
+              (verPdf)="verPdf(p)"
+              (agendar)="agendarObra(p)">
+            </app-card-proyecto>
+          }
+        </div>
+      </section>
+
+      <section class="columna">
+        <div class="columna-header">
+          <span class="punto obra"></span>
+          <h3>En Obra</h3>
+          <span class="contador">{{proyectosEnObra.length}}</span>
+        </div>
+
+        <div class="lista-cards">
+          @for (p of proyectosEnObra; track p.id) {
+            <div (click)="verExpediente(p)" class="wrapper-click" style="cursor: pointer;">
+              <app-card-proyecto 
+                [proyecto]="p" 
+                [cliente]="getDatosCliente(p.clienteId)"
+                (editar)="editarProyecto(p)"
+                (cancelar)="cancelarProyecto(p)"
+                (verPdf)="verPdf(p)">
+              </app-card-proyecto>
+            </div>
+          } @empty {
+      <p class="empty-text">No hay obras en curso</p>
+    }
+        </div>
+      </section>
+
+    </div>
   </div>
-</div>
+} @else {
+  <div class="contenedor-expediente">
+    <app-proyecto-expediente 
+      [proyecto]="proyectoSeleccionado"
+      (cerrar)="cerrarExpediente()">
+    </app-proyecto-expediente>
+  </div>
+}
 
 @if (mostrarModal) {
   <div class="modal-overlay">
     <div class="modal-contenedor">
       <app-proyecto-form 
-        [proyectoAEditar]="proyectoSeleccionado"
+        [proyectoAEditar]="proyectoSeleccionado!"
         (proyectoGuardado)="agregarProyectoALista($event)" 
         (cerrar)="cerrarModal()">
       </app-proyecto-form>
     </div>
   </div>
-}
-
-@if (mostrarModalCotizacion && proyectoParaCotizar) {
-  <div class="modal-overlay">
-    <div class="modal-contenedor">
-      <app-cotizacion-form 
-        [proyecto]="proyectoParaCotizar"
-        [cotizacionAEditar]="cotizacionParaEditar" (cerrar)="cerrarModalCotizacion()"
-        (cotizacionGuardada)="actualizarProyectoConCotizacion($event)">
-      </app-cotizacion-form>
-    </div>
-  </div>
-}
-
-@if (mostrarModalPdf && proyectoParaPdf && cotizacionParaVer) {
-  <app-pdf-preview-modal
-    [proyecto]="proyectoParaPdf"
-    [cotizacion]="cotizacionParaVer"
-    (cerrar)="mostrarModalPdf = false"
-    (editar)="abrirEdicionDesdePdf()">
-  </app-pdf-preview-modal>
 }

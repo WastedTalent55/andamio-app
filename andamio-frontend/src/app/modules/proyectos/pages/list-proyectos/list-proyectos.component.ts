@@ -4,15 +4,14 @@ import { Proyecto } from '../../../../data/models/proyecto.model';
 import { Cotizacion } from '../../../../data/models/proyecto.model';
 import { ProyectoFormComponent } from '../../components/proyecto-form/proyecto-form.component';
 import { ClienteService } from '../../../../data/services/cliente.service';
-import { CotizacionFormComponent } from '../../components/cotizacion-form/cotizacion-form.component';
 import { CardProyectoComponent } from '../../components/card-proyecto/card-proyecto.component';
-import { PdfPreviewModalComponent } from '../../components/pdf-preview-modal/pdf-preview-modal.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ProyectoExpedienteComponent } from '../../components/proyecto-expediente/proyecto-expediente.component';
 
 @Component({
   selector: 'app-list-proyectos',
   standalone: true,
-  imports: [ProyectoFormComponent, CotizacionFormComponent, CardProyectoComponent, PdfPreviewModalComponent],
+  imports: [ProyectoFormComponent, CardProyectoComponent, ProyectoExpedienteComponent],
   templateUrl: './list-proyectos.component.html',
   styleUrl: './list-proyectos.component.scss'
 })
@@ -20,7 +19,7 @@ export class ListProyectosComponent implements OnInit {
   proyectosEvaluacion: Proyecto[] = [];
   proyectosCotizacion: Proyecto[] = [];
   proyectosEnObra: Proyecto[] = [];
-  proyectoSeleccionado?: Proyecto;
+  proyectoSeleccionado?: Proyecto | null = null;
   mostrarModal = false;
 
   constructor(private proyectoService: ProyectoService,
@@ -189,4 +188,13 @@ abrirModalConCliente(clienteId: number) {
     queryParamsHandling: 'merge'
   });
 }
+
+verExpediente(proyecto: Proyecto) {
+    console.log('Tarjeta clickeada:', proyecto);
+  this.proyectoSeleccionado = proyecto;
+  }
+
+  cerrarExpediente() {
+    this.proyectoSeleccionado = null;
+  }
 }
