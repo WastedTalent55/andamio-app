@@ -1,0 +1,60 @@
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background: #1e293b; // Azul oscuro profesional
+  color: white;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+
+  .sidebar-header {
+    padding: 2rem;
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+  }
+
+  .nav-links {
+    list-style: none;
+    padding: 0 1rem;
+    flex-grow: 1;
+
+    li {
+      margin-bottom: 0.5rem;
+      
+      a {
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        color: #94a3b8;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s;
+
+        .icon { margin-right: 12px; font-size: 1.2rem; }
+
+        &:hover {
+          background: rgba(255,255,255,0.05);
+          color: white;
+        }
+
+        &.active {
+          background: #3b82f6; // El azul brillante de nuestra marca
+          color: white;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  .sidebar-footer {
+    padding: 1rem 2rem;
+    font-size: 0.75rem;
+    color: #64748b;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+}

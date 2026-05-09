@@ -1,0 +1,10 @@
+.app-layout {
+  display: flex;
+
+  .main-content {
+    margin-left: 260px; // El mismo ancho que el sidebar
+    width: calc(100% - 260px);
+    min-height: 100vh;
+    background: #f8fafc; // Gris muy claro para el fondo
+  }
+}
