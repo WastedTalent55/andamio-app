@@ -46,6 +46,30 @@
     </section>
   </div>
 
+  <div class="grid-expediente">
+  <section class="card-gastos">
+    <div class="header-card">
+      <h3>Gastos de Materiales / Otros</h3>
+      <button class="btn-gasto" (click)="abrirModalGasto()">+ Gasto</button>
+    </div>
+    
+    <div class="lista-gastos">
+      <div class="gasto-item" *ngFor="let gasto of proyecto.detallesGastos">
+        <div class="gasto-info">
+          <span class="gasto-nombre">{{ gasto.descripcion }}</span>
+          <span class="gasto-fecha">{{ gasto.fecha | date:'shortDate' }}</span>
+        </div>
+        <span class="gasto-monto">- {{ gasto.monto | currency }}</span>
+      </div>
+      
+      <div class="utilidad-box">
+        <label>Utilidad Real Actual:</label>
+        <span [class.negativa]="utilidadEstimada < 0">{{ utilidadEstimada | currency }}</span>
+      </div>
+    </div>
+  </section>
+</div>
+
   <section class="historial-pagos">
     <div class="header-section">
       <h3>Historial de Pagos</h3>
@@ -100,6 +124,30 @@
       <div class="modal-actions">
         <button type="button" (click)="mostrarFormPago = false">Cancelar</button>
         <button type="submit" class="btn-confirmar">Confirmar Pago</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="mostrarFormGasto">
+  <div class="modal-content gasto-form">
+    <h3>Registrar Gasto de Obra</h3>
+    <p style="font-size: 0.8rem; color: gray;">Materiales, viáticos o mano de obra externa.</p>
+    
+    <form (submit)="guardarGasto(descG.value, montoG.value); $event.preventDefault()">
+      <div class="form-group">
+        <label>Descripción del Gasto</label>
+        <input #descG type="text" placeholder="Ej: Compra de bultos de cemento" required>
+      </div>
+      
+      <div class="form-group">
+        <label>Monto</label>
+        <input #montoG type="number" placeholder="0.00" required>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" (click)="mostrarFormGasto = false">Cancelar</button>
+        <button type="submit" class="btn-confirmar" style="background: #ef4444;">Registrar Gasto</button>
       </div>
     </form>
   </div>

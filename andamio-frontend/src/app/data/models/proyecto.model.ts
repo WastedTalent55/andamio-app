@@ -41,6 +41,7 @@ export interface Proyecto {
   totalCotizado?: number;
   pagos?: Pago[]; // Historial de abonos
   presupuestoMateriales?: number;
+  detallesGastos?: GastoDetalle[];
   gastosReales?: number;
   googleEventId?: string;
 }
@@ -53,9 +54,8 @@ export interface Pago {
   nota?: string;
 }
 
-export interface Proyecto {
-  // ... (lo que ya tienes)
-  pagos?: Pago[]; // Historial de abonos
-  presupuestoMateriales?: number;
-  gastosReales?: number;
+export interface GastoDetalle {
+  descripcion: string;
+  monto: number;
+  fecha: Date;
 }

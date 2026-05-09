@@ -15,6 +15,7 @@ export class ProyectoExpedienteComponent implements OnInit {
   @Output() cerrar = new EventEmitter<void>();
 
   mostrarFormPago = false;
+  mostrarFormGasto = false;
   diasTranscurridos: number = 0;
   progresoTiempo: number = 0;
 
@@ -23,6 +24,32 @@ export class ProyectoExpedienteComponent implements OnInit {
   ngOnInit(): void {
     this.calcularTiempos();
   }
+
+  abrirModalGasto() {
+  this.mostrarFormGasto = true;
+}
+
+guardarGasto(desc: string, monto: string) {
+  if (!desc || !monto) return;
+
+  const nuevoGasto = {
+    descripcion: desc,
+    monto: Number(monto),
+    fecha: new Date()
+  };
+
+  if (!this.proyecto.detallesGastos) {
+    this.proyecto.detallesGastos = [];
+  }
+
+  this.proyecto.detallesGastos.push(nuevoGasto);
+  
+  // Actualizamos el total de gastos reales para que el getter de utilidad funcione
+  this.proyecto.gastosReales = (this.proyecto.gastosReales || 0) + Number(monto);
+
+  this.proyectoService.actualizarProyecto(this.proyecto);
+  this.mostrarFormGasto = false;
+}
 
   // --- LÓGICA DE TIEMPOS ---
   calcularTiempos() {
@@ -92,4 +119,11 @@ export class ProyectoExpedienteComponent implements OnInit {
     // Cerramos modal y la vista se actualizará sola gracias a los getters
     this.mostrarFormPago = false;
   }
+
+  // En proyecto-expediente.component.ts
+
+get utilidadEstimada(): number {
+  // Utilidad = Total Cobrado - Gastos Reales
+  return this.totalPagado - (this.proyecto.gastosReales || 0);
+}
 }
