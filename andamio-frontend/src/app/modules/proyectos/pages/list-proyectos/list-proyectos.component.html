@@ -94,3 +94,12 @@
     </div>
   </div>
 }
+
+@if (mostrarModalPdf && proyectoParaPdf && cotizacionParaVer) {
+  <app-pdf-preview-modal
+    [proyecto]="proyectoParaPdf"
+    [cotizacion]="cotizacionParaVer"
+    (cerrar)="mostrarModalPdf = false"
+    (editar)="abrirEdicionDesdePdf()">
+  </app-pdf-preview-modal>
+}

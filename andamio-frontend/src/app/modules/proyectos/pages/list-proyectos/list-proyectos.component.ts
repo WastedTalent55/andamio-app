@@ -7,11 +7,17 @@ import { ClienteService } from '../../../../data/services/cliente.service';
 import { CardProyectoComponent } from '../../components/card-proyecto/card-proyecto.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProyectoExpedienteComponent } from '../../components/proyecto-expediente/proyecto-expediente.component';
+import { PdfPreviewModalComponent } from '../../components/pdf-preview-modal/pdf-preview-modal.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-list-proyectos',
   standalone: true,
-  imports: [ProyectoFormComponent, CardProyectoComponent, ProyectoExpedienteComponent],
+  imports: [ProyectoFormComponent, 
+            CardProyectoComponent, 
+            ProyectoExpedienteComponent, 
+            PdfPreviewModalComponent,
+            CommonModule],
   templateUrl: './list-proyectos.component.html',
   styleUrl: './list-proyectos.component.scss'
 })

@@ -1,41 +1,150 @@
+// Variables de diseño para coherencia
+$primary: #4f46e5;
+$success: #10b981;
+$warning: #f59e0b;
+$danger: #ef4444;
+$bg-light: #f8fafc;
+$text-main: #1e293b;
+$text-muted: #64748b;
+$shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+
 .expediente-container {
-  padding: 20px;
-  background: white;
-  border-radius: 12px;
+  padding: 2rem;
+  background-color: $bg-light;
+  min-height: 100vh;
+  color: $text-main;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 
-  .dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
-  }
+  .expediente-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
 
-  .widget {
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #eee;
-    
-    &.retrasado {
-      border-left: 5px solid #e74c3c;
-      background: #fdf2f2;
-      .alerta { color: #e74c3c; font-weight: bold; font-size: 0.8rem; }
+    .btn-volver {
+      background: white;
+      border: 1px solid #e2e8f0;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      &:hover { background: #f1f5f9; transform: translateX(-3px); }
     }
-    
-    &.critico { border-left: 5px solid #f39c12; }
-    &.bueno { border-left: 5px solid #27ae60; }
+
+    h2 { font-size: 1.875rem; font-weight: 700; margin: 0; }
+
+    .badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      &.Cita { background: #dbeafe; color: #1e40af; }
+      &.En.Progreso { background: #dcfce7; color: #166534; }
+      &.Finalizado { background: #f3f4f6; color: #374151; }
+    }
   }
 
-  .progress-bar {
-    height: 8px;
-    background: #eee;
-    border-radius: 4px;
-    margin: 10px 0;
-    overflow: hidden;
+  .grid-expediente {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr; // El resumen financiero es más ancho
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 
-    .progress-fill {
-      height: 100%;
-      background: #3498db;
-      transition: width 0.3s ease;
+    section {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: $shadow;
+      
+      h3 { margin-top: 0; font-size: 1.1rem; color: $text-muted; margin-bottom: 1.5rem; }
+    }
+  }
+
+  // Resumen Financiero
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    .stat-item {
+      padding: 1rem;
+      background: #f1f5f9;
+      border-radius: 10px;
+      
+      label { display: block; font-size: 0.75rem; color: $text-muted; margin-bottom: 0.5rem; }
+      .valor { font-size: 1.25rem; font-weight: 700; }
+      .cobrado { color: $success; }
+      .pendiente { color: $danger; }
+    }
+  }
+
+  // Barra de Progreso Cobro
+  .progreso-pago {
+    p { font-size: 0.875rem; color: $text-muted; margin-bottom: 0.5rem; }
+    .barra-fondo {
+      height: 12px;
+      background: #e2e8f0;
+      border-radius: 10px;
+      .barra-relleno {
+        height: 100%;
+        background: linear-gradient(90deg, $success, #34d399);
+        border-radius: 10px;
+        transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    }
+  }
+
+  // Rendimiento de Tiempos
+  .indicador-rendimiento {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 700;
+    
+    &[data-estado="bueno"] { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+    &[data-estado="critico"] { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+    &[data-estado="retrasado"] { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+  }
+
+  // Tabla de Historial
+  .historial-pagos {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: $shadow;
+
+    .header-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+
+      .btn-pagar {
+        background: $primary;
+        color: white;
+        border: none;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s;
+        &:hover { transform: scale(1.05); background: #4338ca; }
+      }
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      
+      th { text-align: left; padding: 1rem; color: $text-muted; font-size: 0.85rem; border-bottom: 2px solid #f1f5f9; }
+      td { padding: 1rem; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; }
+      tbody tr:hover { background: #f8fafc; }
     }
   }
 }

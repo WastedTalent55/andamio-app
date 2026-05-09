@@ -1,33 +1,73 @@
-<div class="expediente-container">
-  <header>
-    <h2>📂 Expediente: {{ proyecto.nombre }}</h2>
-    <button class="btn-cerrar" (click)="cerrar.emit()">✕</button>
+<div class="expediente-container" *ngIf="proyecto">
+  <header class="expediente-header">
+    <button class="btn-volver" (click)="cerrar.emit()">← Volver</button>
+    <h2>Expediente: {{ proyecto.nombre }}</h2>
+    <span class="badge" [className]="'badge ' + proyecto.estado">{{ proyecto.estado }}</span>
   </header>
 
-  <div class="dashboard-grid">
-    <div class="widget" [ngClass]="estadoRendimiento">
-      <h3>⏱️ Control de Tiempo</h3>
-      <div class="stat">
-        <span class="label">Días transcurridos:</span>
-        <span class="value">{{ diasTranscurridos }}</span>
+  <div class="grid-expediente">
+    <section class="card-financiera">
+      <h3>Resumen Financiero</h3>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <label>Presupuesto Total</label>
+          <span class="valor">{{ totalPresupuestado | currency }}</span>
+        </div>
+        <div class="stat-item">
+          <label>Total Cobrado</label>
+          <span class="valor cobrado">{{ totalPagado | currency }}</span>
+        </div>
+        <div class="stat-item">
+          <label>Saldo Pendiente</label>
+          <span class="valor pendiente">{{ saldoPendiente | currency }}</span>
+        </div>
       </div>
-      <div class="stat">
-        <span class="label">Prometido al cliente:</span>
-        <span class="value">{{ proyecto.diasEstimados || 'No definido' }} días</span>
-      </div>
-      
-      <div class="progress-bar">
-        <div class="progress-fill" [style.width.%]="progresoTiempo > 100 ? 100 : progresoTiempo"></div>
-      </div>
-      
-      @if (estadoRendimiento === 'retrasado') {
-        <p class="alerta">⚠️ Estás perdiendo rentabilidad por retraso.</p>
-      }
-    </div>
 
-    <div class="widget">
-      <h3>💰 Finanzas</h3>
-      <p>Aquí conectaremos los pagos que mencionaste...</p>
-    </div>
+      <div class="progreso-pago">
+        <div class="barra-fondo">
+          <div class="barra-relleno" [style.width.%]="porcentajeCobrado"></div>
+        </div>
+        <p>{{ porcentajeCobrado | number:'1.0-0' }}% del total recaudado</p>
+      </div>
+    </section>
+
+    <section class="card-tiempos">
+      <h3>Estado de la Obra</h3>
+      <div class="tiempo-info">
+        <p><strong>Días en curso:</strong> {{ diasTranscurridos }} días</p>
+        <p><strong>Estimado:</strong> {{ proyecto.diasEstimados || '---' }} días</p>
+      </div>
+      <div class="indicador-rendimiento" [attr.data-estado]="estadoRendimiento">
+        Rendimiento: {{ estadoRendimiento | uppercase }}
+      </div>
+    </section>
   </div>
+
+  <section class="historial-pagos">
+    <div class="header-section">
+      <h3>Historial de Pagos</h3>
+      <!-- <button class="btn-pagar" (click)="abrirModalPago()">+ Registrar Abono</button> -->
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Método</th>
+          <th>Nota</th>
+          <th>Monto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pago of proyecto.pagos">
+          <td>{{ pago.fecha | date:'dd/MM/yyyy' }}</td>
+          <td>{{ pago.metodo }}</td>
+          <td>{{ pago.nota || '-' }}</td>
+          <td>{{ pago.monto | currency }}</td>
+        </tr>
+        <tr *ngIf="!proyecto.pagos?.length">
+          <td colspan="4" class="text-center">No hay pagos registrados aún.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 </div>

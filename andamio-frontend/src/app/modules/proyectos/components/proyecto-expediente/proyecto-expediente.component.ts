@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Proyecto } from '../../../../data/models/proyecto.model'; 
+import { Proyecto, Pago } from '../../../../data/models/proyecto.model'; 
 
 @Component({
   selector: 'app-proyecto-expediente',
@@ -41,5 +41,35 @@ export class ProyectoExpedienteComponent implements OnInit {
     if (this.diasTranscurridos > this.proyecto.diasEstimados) return 'retrasado';
     if (this.progresoTiempo > 80) return 'critico';
     return 'bueno';
+  }
+
+  // Añade esto dentro de la clase ProyectoExpedienteComponent
+
+  // 1. Total presupuestado (de la última cotización)
+  get totalPresupuestado(): number {
+    if (!this.proyecto.cotizaciones || this.proyecto.cotizaciones.length === 0) return 0;
+    return this.proyecto.cotizaciones[this.proyecto.cotizaciones.length - 1].totalNeto;
+  }
+
+  // 2. Total pagado por el cliente
+  get totalPagado(): number {
+    return (this.proyecto.pagos || []).reduce((acc, pago) => acc + pago.monto, 0);
+  }
+
+  // 3. Saldo pendiente
+  get saldoPendiente(): number {
+    return this.totalPresupuestado - this.totalPagado;
+  }
+
+  // 4. Porcentaje de cobro
+  get porcentajeCobrado(): number {
+    if (this.totalPresupuestado === 0) return 0;
+    return (this.totalPagado / this.totalPresupuestado) * 100;
+  }
+
+  // 5. Utilidad estimada (Ingresos - Gastos reales)
+  get utilidadEstimada(): number {
+    const gastos = this.proyecto.gastosReales || 0;
+    return this.totalPresupuestado - gastos;
   }
 }
